@@ -30,14 +30,17 @@ print("e=",e,"Coulomb")
 print("beta=",beta, "1/eV")
 
 A=4*np.pi*np.sqrt(4*m)*dx/h #constante definida
-area=346*375E8
+
+area=346*375 #microns squared
+
+conver=1E8#angstroms to microns 
 
 eta=kb*T*np.log(3) #groundstate taken at 1/2 of Bose-Einsteins distribution
 
 mu=eta#chemical potential, no particles are added
 
 
-EV=np.linspace(0,1E-3,300)*2#(-50E15,10E15,1000)*2*e#applied potential in eV
+EV=np.linspace(0,1E-3,300)#(-50E15,10E15,1000)*2*e#applied potential in eV
 
 V=EV/(2*e) #Applied potential in V
 
@@ -50,7 +53,7 @@ def C1():
     
     fact2=np.exp(-A*np.sqrt(Vo))
 
-    return fact1*fact2*1E16*hbar/hs
+    return fact1*fact2*hbar*conver/hs
 
 
 def C2():
@@ -78,6 +81,7 @@ def func(x,EV):
 
 J1=np.zeros(len(V))
 J2=np.zeros(len(V))
+u=np.ones(len(EV))*eta
 
 print("C1=", C1())
 print("C2=", C2())
@@ -95,6 +99,11 @@ for i in range(len(EV)):
     #J1[i]=area*resultados[0]
     
     J2[i]=area*C1()*np.exp(beta*(C2()*eta+mu))*(1-np.exp(-beta*EV[i]))/(1-C2())
+
+
+
+v=np.linspace(min(J2),max(J2),len(EV))
+
 '''
     print("C1=", C1(a,m,h,beta,Vo,g))
     print("C2=", C2(a,m,Vo,beta))
@@ -111,8 +120,11 @@ plt.close()
 '''
 
 plt.plot(EV,J2)
+
+plt.plot(u,v,"k--",linewidth=0.5)
+
 plt.xlabel("$ V [Volts]  $",size=15)
-plt.ylabel("$ I_2 [Amp/cm^2]$ (approx) ",size=15)
+plt.ylabel("$ I [Amp]$ (approx) ",size=15)
 plt.title("$I-V\ curve$ ",size=15)
 plt.savefig("IV_approx.png")
 plt.show()
