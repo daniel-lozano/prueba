@@ -20,20 +20,43 @@ c5=55/(512*pow(b,8))
 c6=-1/(1024*pow(b,10))
 
 
-print(c0*c1,c0*c2,c0*c3,c0*c4,c0*c5,c0*c6)
+r=np.linspace(0.1,0.55,1000)
 
-r=np.linspace(0.1,15,1000)
+
+alphaI=7.2
+alphaN=11.08
+F=0.8
+m=0
+Io=0.58
+
+
+def potential(F,r):
+    
+    t1= -(alphaI*F/r**2)+F*r
+
+
+    return t1
+
+
+def I(F):
+
+    return Io + (F**2)/(2*(alphaN-alphaI))
+
+
+
+
 
 
 def func(r):
     return (c0*(c1+c2*r**2+c3*r**4+c4*r**6+c5*r**8+c6*r**10)*np.exp(-(r**2)/(4*b**2)) +0.5*np.pi*erf(r/(2*b))/r)
 
-V=-2*func(r)
+Vfs=-2*func(r)+2*potential(F,r)
+V=-2/r+2*potential(F,r)
 
-plt.plot(r,V,label="finite size")
-plt.plot(r,-1/r,label="Coulomb")
+plt.plot(r,Vfs,label="finite size")
+plt.plot(r,V,label="Coulomb")
 plt.xlim(0,max(r))
-plt.ylim(-4,4)
+#plt.ylim(-4,4)
 
 plt.legend()
 plt.show()
