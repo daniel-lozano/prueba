@@ -30,28 +30,30 @@ m=0
 Io=0.58
 
 
-def potential(F,r):
-    
-    t1= -(alphaI*F/r**2)+F*r
-
-
-    return t1
-
 
 def I(F):
 
     return Io + (F**2)/(2*(alphaN-alphaI))
 
-
-
-
-
-
 def func(r):
     return (c0*(c1+c2*r**2+c3*r**4+c4*r**6+c5*r**8+c6*r**10)*np.exp(-(r**2)/(4*b**2)) +0.5*np.pi*erf(r/(2*b))/r)
 
+
+Vfs=-2*I(F)*func(r)
+V=-2*I(F)/abs(r1)
+
+plt.plot(r,Vfs,label="finite size")
+plt.plot(r1,V,label="Coulomb")
+#plt.xlim(0,max(r))
+plt.ylim(-4,4)
+plt.savefig("comparing_potentials.png")
+plt.legend()
+plt.show()
+plt.close()
+
+
 Vfs=-2*I(F)*func(r)-(alphaI*F/r**2)+F*r
-V=-2*I(F)/r1+potential(F,r1) -(alphaI*F/r1**2)+F*r1
+V=-2*I(F)/abs(r1) -(alphaI*F/r1**2)+F*r1
 
 plt.plot(r,Vfs,label="finite size")
 plt.plot(r1,V,label="Coulomb")
