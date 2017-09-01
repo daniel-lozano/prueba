@@ -20,12 +20,12 @@ c5=55/(512*pow(b,8))
 c6=-1/(1024*pow(b,10))
 
 
-r=np.linspace(0.1,0.55,1000)
-
+r=np.linspace(-15,15,1000)
+r1=np.linspace(-15,15,1000)
 
 alphaI=7.2
 alphaN=11.08
-F=0.8
+F=0.08
 m=0
 Io=0.58
 
@@ -50,14 +50,14 @@ def I(F):
 def func(r):
     return (c0*(c1+c2*r**2+c3*r**4+c4*r**6+c5*r**8+c6*r**10)*np.exp(-(r**2)/(4*b**2)) +0.5*np.pi*erf(r/(2*b))/r)
 
-Vfs=-2*func(r)+2*potential(F,r)
-V=-2/r+2*potential(F,r)
+Vfs=-2*I(F)*func(r)-(alphaI*F/r**2)+F*r
+V=-2*I(F)/r1+potential(F,r1) -(alphaI*F/r1**2)+F*r1
 
 plt.plot(r,Vfs,label="finite size")
-plt.plot(r,V,label="Coulomb")
-plt.xlim(0,max(r))
-#plt.ylim(-4,4)
-
+plt.plot(r1,V,label="Coulomb")
+#plt.xlim(0,max(r))
+plt.ylim(-4,4)
+plt.savefig("comparing_potentials.png")
 plt.legend()
 plt.show()
 
