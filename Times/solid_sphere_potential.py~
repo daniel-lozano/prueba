@@ -1,0 +1,9 @@
+import numpy as np
+import matplot lib as plt
+
+
+a=1
+z=2
+r=np.linspace(a+0.1,a*100,1000)
+
+v=-a/(2*(r**2-a**2))-(z-a/(2*r))/r
