@@ -9,25 +9,26 @@ dx=20.7989  # Angstrom
 e=1.6E-19 # Coulomb
 m=0.51E6   # eV
 
-
-Vo=(1.8 +3.4E-4)# eV, Vo+Delta
+Do=30.5E-4 # eV
 
 hbar=1973.27# eV*Angstrom =[hbar*c]
-
 h=2*np.pi*hbar # eV*Angstrom
 hs=6.5E-16 # eV s
 
 kb=8.6E-5# eV/Kelvin/e
-T=1.5#4 Kelvin
-beta=1.0/(kb*T)
 
-print("A=",dx, "Angstroms")
+T=[1,2,4,5]#9.2#4 Kelvin
+Tc=9.25 #Kelvin
 
-print("Vo+Deltao=",Vo, "eV")
+g=1E-3 #eV/e
+
+
+
+print("dx=",dx, "Angstroms")
+print("Deltao=",Do, "eV")
 print("m=",m,"eV")
 print("hbar=",hbar,"eV*Angstrom")
 print("e=",e,"Coulomb")
-print("beta=",beta, "1/eV")
 
 A=4*np.pi*np.sqrt(4*m)*dx/h #constante definida
 
@@ -35,19 +36,23 @@ area=346*375 #microns squared
 
 conver=1E8#angstroms to microns 
 
-eta=kb*T*np.log(3) #groundstate taken at 1/2 of Bose-Einsteins distribution
 
-mu=eta#chemical potential, no particles are added
-
-
-EV=np.linspace(0,1E-3,300)#(-50E15,10E15,1000)*2*e#applied potential in eV
+EV=np.linspace(0,3E-3,300)#(-50E15,10E15,1000)*2*e#applied potential in eV
 
 V=EV/(2*e) #Applied potential in V
 
 
+beta=1.0/(kb*T[0])
+    
+eta=kb*T[0]*np.log(3) #groundstate taken at 1/2 of Bose-Einsteins distribution
+mu=eta#chemical potential, no particles are added
+
+
+
+
 #Definiendo constantes de la integral usada
 
-def C1():
+def C1(Vo):
     
     fact1=16.0*np.pi*m*e/(pow(h,3)*pow(beta,2)) #cambio hecho en beta
     
@@ -56,15 +61,15 @@ def C1():
     return fact1*fact2*hbar*conver/hs
 
 
-def C2():
+def C2(Vo):
 
     return A/(2*np.sqrt(Vo)*pow(beta,1))# #cambio hecho en beta
 
-def C3(EV):
+def C3(EV,Vo):
 
     return np.exp((mu-EV)*beta)
 
-def C4(EV):
+def C4(EV,Vo):
     
     return np.exp(mu*beta)
 
@@ -78,31 +83,123 @@ def func(x,EV):
 
     return C1()*f1*f2
 
+#Definiendo funcion del gap
+
+def Gap(T):
+
+    return 1.8+3.07*0.5*Do*np.sqrt(1-T/Tc)
+
+def DeT(T):
+
+    if(T>0.6*Tc):
+        return 3.07*kb*Tc*np.sqrt(1-T/Tc)
+    if(T<0.6*Tc):
+        return Do*(1-(2*np.pi*kb*T*np.exp(-Do/(kb*T)))/Do)
+
+
 
 J1=np.zeros(len(V))
 J2=np.zeros(len(V))
-u=np.ones(len(EV))*eta
 
-print("C1=", C1())
-print("C2=", C2())
-print("C3=", C3(EV[0]))
-print("C4=", C4(EV[0]))
+
+print("C1=", C1(Do))
+print("C2=", C2(Do))
+print("C3=", C3(EV[0],Do))
+print("C4=", C4(EV[0],Do))
 print("A=",A )
 
 
-for i in range(len(EV)):
+for j in range(len(T)):
+    beta=1.0/(kb*T[j])
 
-    funcion=lambda x: func(x,EV[i])
+    eta=kb*T[j]*np.log(3) #groundstate taken at 1/2 of Bose-Einsteins distribution
+    mu=eta#chemical potential, no particles are added
     
-    #resultados=integrate.quad(funcion,0,np.infty)
+    u=np.ones(len(EV))*eta
+
+    l="$ T="+ str(T[j])+" K $"
     
-    #J1[i]=area*resultados[0]
+    Vo=Gap(T[j])
     
-    J2[i]=area*C1()*np.exp(beta*(C2()*eta+mu))*(1-np.exp(-beta*EV[i]))/(1-C2())
+    DeltaT=DeT(T[j])#3.07*kb*Tc*np.sqrt(1-T[j]/Tc)
+    
+    N=DeltaT/(2*g) +0.5#
+    print("N=",N)
+    
+    for i in range(len(EV)):
+        #funcion=lambda x: func(x,EV[i])
+    
+        #resultados=integrate.quad(funcion,0,np.infty)
+    
+        #J1[i]=area*resultados[0]
+    
+        J2[i]=N*area*C1(Vo)*np.exp(beta*(C2(Vo)*eta+mu))*(1-np.exp(-beta*EV[i]))/(1-C2(Vo))
+
+    plt.plot(EV,J2,label=l)
+
+
+    v=np.linspace(min(J2),max(J2),len(EV))
+    plt.plot(u,v,"k--",linewidth=0.5)
+
+plt.xlabel("$ V [Volts]  $",size=15)
+plt.ylabel("$ I [Amp]$ (approx) ",size=15)
+plt.title("$I-V\ curve$ ",size=15)
+plt.legend(loc=2)
+
+plt.savefig("IV_approx_DT_lowT.png")
+plt.show()
+plt.close()
+
+
+T=[9,9.1,9.2,9.24]
+
+for j in range(len(T)):
+    beta=1.0/(kb*T[j])
+    
+    eta=kb*T[j]*np.log(3) #groundstate taken at 1/2 of Bose-Einsteins distribution
+    mu=eta#chemical potential, no particles are added
+    
+    u=np.ones(len(EV))*eta
+    
+    l="$ T="+ str(T[j])+" K $"
+    
+    Vo=Gap(T[j])
+    
+    DeltaT=3.07*kb*Tc*np.sqrt(1-T[j]/Tc)
+    
+    N=DeltaT/(2*g) +0.5#
+    print("N=",N)
+    
+    for i in range(len(EV)):
+        #funcion=lambda x: func(x,EV[i])
+        
+        #resultados=integrate.quad(funcion,0,np.infty)
+        
+        #J1[i]=area*resultados[0]
+        
+        J2[i]=N*area*C1(Vo)*np.exp(beta*(C2(Vo)*eta+mu))*(1-np.exp(-beta*EV[i]))/(1-C2(Vo))
+
+    plt.plot(EV,J2,label=l)
+
+
+#v=np.linspace(min(J2),max(J2),len(EV))
+#   plt.plot(u,v,"k--",linewidth=0.5)
+
+plt.xlabel("$ V [Volts]  $",size=15)
+plt.ylabel("$ I [Amp]$ (approx) ",size=15)
+plt.title("$I-V\ curve$ ",size=15)
+plt.legend(loc=2)
+
+plt.savefig("IV_approx_DT_highT.png")
+plt.show()
+plt.close()
 
 
 
-v=np.linspace(min(J2),max(J2),len(EV))
+
+
+
+
 
 '''
     print("C1=", C1(a,m,h,beta,Vo,g))
@@ -119,16 +216,8 @@ plt.close()
 
 '''
 
-plt.plot(EV,J2)
 
-plt.plot(u,v,"k--",linewidth=0.5)
 
-plt.xlabel("$ V [Volts]  $",size=15)
-plt.ylabel("$ I [Amp]$ (approx) ",size=15)
-plt.title("$I-V\ curve$ ",size=15)
-plt.savefig("IV_approx.png")
-plt.show()
-plt.close()
 
 
 
