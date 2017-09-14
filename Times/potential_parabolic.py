@@ -27,7 +27,7 @@ def potential(F,n,A,B):
 
 def I(F):
 
-    return Io + (F**2)/(2*(alphaN-alphaI))
+    return Io + ((alphaN-alphaI)*F**2)/(2)
 
 
 
