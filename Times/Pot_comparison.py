@@ -42,8 +42,8 @@ def nucleus_func(r,a,b):
     c4=-495/(128*pow(b,6))
     c5=55/(512*pow(b,8))
     c6=-1.0/(1024*pow(b,10))
-    
-    return (c0*(c1+c2*r**2+c3*r**4+c4*r**6+c5*r**8+c6*r**10)*np.exp(-(r**2)/(4*b**2)) +erf(r/(2*b))/(4*np.pi*r))*2*(np.pi)**2
+    Norm=1/0.0795#(np.pi)**2
+    return (c0*(c1+c2*r**2+c3*r**4+c4*r**6+c5*r**8+c6*r**10)*np.exp(-(r**2)/(4*b**2)) +erf(r/(2*b))/(4*np.pi*r))*Norm#*2*(np.pi)**2
 
 def e_func(r,leng):
     
@@ -147,9 +147,9 @@ plt.legend(loc=4)
 plt.show()
 plt.close()
 
-'''
+"""
 ----------------------------POTENTIAL FOR THE ION, CHECK---------------------------------------
-
+"""
 
 
 
@@ -172,14 +172,14 @@ plt.xlim(min(r),max(r))
 plt.ylim(-10,3)
 plt.xlabel("$ r (Angstroms)  $",size=15)
 plt.ylabel("$ V(r) $",size=15)
-plt.title("$ V_{FS}+V_e\ Vs.\ Coulomb  $")
+plt.title("$ check  $")
 #plt.savefig("comparing_potentials_final.png")
 plt.legend(loc=4)
 plt.show()
 plt.close()
  
 
-'''
+
 
 
 """
@@ -190,7 +190,7 @@ plt.close()
 
 a=0.316E-5
 b=0.675E-5
-r=np.linspace(1E-6,15,1000)
+r=np.linspace(1E-6,0.5,1000)
 B=(0.529/2)#*1E5
 A=2E-5
 F=0.08
@@ -204,7 +204,7 @@ V=-1/r + F*r*factor -(alphaI*F/(factor*r)**2)
 plt.plot(r,Vfs,label="Corrected")
 plt.plot(r,V,label="Uncorrected")
 plt.xlim(min(r),max(r))
-plt.ylim(-10,10)
+plt.ylim(-70,10)
 plt.xlabel("$ r (Angstroms)  $",size=15)
 plt.ylabel("$ V(r) $",size=15)
 plt.title("$ V_{FS}+V_e\ Vs.\ Coulomb  $")
