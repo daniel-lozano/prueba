@@ -7,8 +7,8 @@ from sympy.integrals.transforms import fourier_transform
 
 
 
-#a=0.316 # fermi
-#b=0.675 # fermi
+a=0.316 # fermi
+b=0.675 # fermi
 
 
 
@@ -21,8 +21,8 @@ value=integrate(q*sin(r*q),(q,0,oo))
 print("value=",Integ)
 
 
-#a=0.316 # fermi
-#b=0.675 # fermi
+a=0.316E-5 # fermi
+b=0.675E-5 # fermi
 
 def func(r):
 
@@ -41,7 +41,7 @@ ax3 = plt.subplot(gs[1,: ])
 
 ax1.set_title("finite size")
 ax1.plot(r,V,"r")
-ax1.set_ylabel("$ V(ev)   $")
+ax1.set_ylabel("$ V(eV)   $")
 ax1.set_xlabel("$ r(rm)   $")
 
 
@@ -53,7 +53,7 @@ ax2.set_xlabel("$ r(rm)   $")
 
 plt.plot(r,-1/r)
 ax3.plot(r,V,"r")
-ax3.set_ylabel("$ V(ev)   $")
+ax3.set_ylabel("$ V(eV)   $")
 ax3.set_xlabel("$ r(rm)   $")
 
 
