@@ -7,7 +7,7 @@ from scipy import integrate
 alphaI=7.2
 alphaN=11.08
 F=0.6
-m=0
+m=2
 Io=0.58
 
 
