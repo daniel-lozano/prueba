@@ -7,7 +7,7 @@ from scipy import integrate
 alphaI=7.2
 alphaN=11.08
 F=0.6
-m=2
+m=0
 Io=0.58
 
 
@@ -42,12 +42,12 @@ V3=potential(F,n,1,1)
 plt.plot(n,V0,label="$ F=0\ V_{pol}=0\ $" )
 plt.plot(n,V1,label="$ V_{pol}=0\ $" )
 plt.plot(n,V2,label=" $ V_{pol}\ $ ")
-plt.plot(n,V3,label="$  V_{pol} \cdot exp(-3/\eta) $ ")
+plt.plot(n,V3,label="$  V_{pol} \cdot exp(-3/\sigma) $ ")
 plt.ylim(-1.5,1.5)
 
 plt.title("$ Potentials $",size=20)
 plt.xlabel("$ \eta\ (a.u.) $",size=15)
-plt.ylabel("$ V(\eta,F)+I_P(F)/4 $",size=15)
+plt.ylabel("$ V(\eta,F)+I_p(F)/4 $",size=15)
 
 
 plt.legend(loc=1)

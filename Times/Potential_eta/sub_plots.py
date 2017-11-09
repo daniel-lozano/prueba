@@ -59,6 +59,28 @@ def I(F):
     
     return Io + ((alphaN-alphaI)*F**2)/(2)
 
+def potential_schro(F,n):
+    
+    Z=2
+    
+    ro=1/(2*Z)
+    
+    t1= (1-(1+m)*np.sqrt(I(F))/2.0)/(2*n)#(2-(1+m)*np.sqrt(I(F))/2.0)/(2*n)
+    
+    t2= n*F/8
+    
+    t3= (m**2-1)/(8*n**2)
+    
+    t4=  np.exp(-3/n) * (alphaI*F/n**2) +I(F)/4.0
+    
+    t5= (1/n +1/(4*ro))*np.exp(-n/(2*ro))
+    
+    
+    return -t1 - t2 + t3 + t4 - t5
+
+
+
+
 
 #F=[0,0.2,0.4,0.6,0.8]
 
@@ -77,7 +99,7 @@ plt.grid(True)
 plt.plot(n,V1,"b",label="$ F=$"+str(0.2))#str(F[1]) )
 plt.plot(n,V2,"r",label="$ F=$"+str(0.4))#str(F[2]))
 plt.plot(n,V3,"g",label="$ F=$"+str(0.6))#str(F[3]))
-plt.plot(n,V4,"c",label="$ F=$"+str(0.6))#str(F[3]))
+plt.plot(n,V4,"c",label="$ F=$"+str(0.8))#str(F[3]))
 plt.ylim(-0.3,0.5)
 
 
@@ -85,10 +107,6 @@ plt.title("$ Uncorrected\ potential $",size=20)
 plt.xlabel("$ \eta\ (a.u.) $",size=15)
 plt.ylabel("$ V(\eta,F)+I_P(F)/4 $",size=15)
 plt.legend(loc=4)
-
-
-
-
 
 
 
@@ -106,7 +124,7 @@ plt.grid(True)
 plt.plot(n,V1,"b",label="$ F=$"+str(0.2))#str(F[1]) )
 plt.plot(n,V2,"r",label="$ F=$"+str(0.4))#str(F[2]))
 plt.plot(n,V3,"g",label="$ F=$"+str(0.6))#str(F[3]))
-plt.plot(n,V4,"c",label="$ F=$"+str(0.6))#str(F[3]))
+plt.plot(n,V4,"c",label="$ F=$"+str(0.8))#str(F[3]))
 
 
 plt.ylim(-0.3,0.5)
@@ -120,3 +138,127 @@ plt.legend(loc=4)
 plt.savefig("subplot.png")
 plt.plot()
 plt.show()
+
+"""
+------------------ POTENTIAL WITH SCHRODINGER----------------------------------------------
+"""
+
+plt.figure(figsize=(10,5))
+n=np.linspace(0.01,5,1000)
+V0=potential(0,n)
+V1=potential(0.2,n)
+V2=potential(0.4,n)
+V3=potential(0.6,n)
+V4=potential(0.8,n)
+
+plt.subplot(1,2,1)
+plt.grid(True)
+
+#plt.plot(n,V0,"k",label="$ F=$"+str(0))#str(F[0]) )
+plt.plot(n,V1,"b",label="$ F=$"+str(0.2))#str(F[1]) )
+plt.plot(n,V2,"r",label="$ F=$"+str(0.4))#str(F[2]))
+plt.plot(n,V3,"g",label="$ F=$"+str(0.6))#str(F[3]))
+plt.plot(n,V4,"c",label="$ F=$"+str(0.8))#str(F[3]))
+plt.ylim(-0.3,0.5)
+
+
+plt.title("$ Uncorrected\ potential $",size=20)
+plt.xlabel("$ \eta\ (a.u.) $",size=15)
+plt.ylabel("$ V(\eta,F)+I_P(F)/4 $",size=15)
+plt.legend(loc=4)
+
+
+
+n=np.linspace(0.01,5,1000)
+V0=potential_schro(0,n)
+V1=potential_schro(0.2,n)
+V2=potential_schro(0.4,n)
+V3=potential_schro(0.6,n)
+V4=potential_schro(0.8,n)
+
+plt.subplot(1,2,2)
+plt.grid(True)
+
+#plt.plot(n,V0,"k--",label="$ F=$"+str(0))#str(F[0]) )
+plt.plot(n,V1,"b",label="$ F=$"+str(0.2))#str(F[1]) )
+plt.plot(n,V2,"r",label="$ F=$"+str(0.4))#str(F[2]))
+plt.plot(n,V3,"g",label="$ F=$"+str(0.6))#str(F[3]))
+plt.plot(n,V4,"c",label="$ F=$"+str(0.8))#str(F[3]))
+
+
+plt.ylim(-0.3,0.5)
+
+plt.title("$ Hydrogen\ atom\ solution\ $",size=20)
+plt.xlabel("$ \eta\ (a.u.) $",size=15)
+
+
+
+plt.legend(loc=4)
+plt.savefig("subplot_schro.png")
+plt.plot()
+plt.show()
+
+"""
+    ------------------ POTENTIALS COMPARISON----------------------------------------------
+    """
+
+plt.figure(figsize=(10,5))
+n=np.linspace(0.01,5,1000)
+V0=potential_C(0,n)
+V1=potential_C(0.2,n)
+V2=potential_C(0.4,n)
+V3=potential_C(0.6,n)
+V4=potential_C(0.8,n)
+
+plt.subplot(1,2,1)
+plt.grid(True)
+
+#plt.plot(n,V0,"k",label="$ F=$"+str(0))#str(F[0]) )
+plt.plot(n,V1,"b",label="$ F=$"+str(0.2))#str(F[1]) )
+plt.plot(n,V2,"r",label="$ F=$"+str(0.4))#str(F[2]))
+plt.plot(n,V3,"g",label="$ F=$"+str(0.6))#str(F[3]))
+plt.plot(n,V4,"c",label="$ F=$"+str(0.8))#str(F[3]))
+plt.ylim(-0.3,0.5)
+
+
+plt.title("$ Cloud\ Potential $",size=20)
+plt.xlabel("$ \eta\ (a.u.) $",size=15)
+plt.ylabel("$ V(\eta,F)+I_P(F)/4 $",size=15)
+plt.legend(loc=4)
+
+
+
+n=np.linspace(0.01,5,1000)
+V0=potential_schro(0,n)
+V1=potential_schro(0.2,n)
+V2=potential_schro(0.4,n)
+V3=potential_schro(0.6,n)
+V4=potential_schro(0.8,n)
+
+plt.subplot(1,2,2)
+plt.grid(True)
+
+#plt.plot(n,V0,"k--",label="$ F=$"+str(0))#str(F[0]) )
+plt.plot(n,V1,"b",label="$ F=$"+str(0.2))#str(F[1]) )
+plt.plot(n,V2,"r",label="$ F=$"+str(0.4))#str(F[2]))
+plt.plot(n,V3,"g",label="$ F=$"+str(0.6))#str(F[3]))
+plt.plot(n,V4,"c",label="$ F=$"+str(0.8))#str(F[3]))
+
+
+plt.ylim(-0.3,0.5)
+
+plt.title("$ Hydrogen\ atom\ Potential\ $",size=20)
+plt.xlabel("$ \eta\ (a.u.) $",size=15)
+
+
+
+plt.legend(loc=4)
+plt.savefig("subplot_comparing.png")
+plt.plot()
+plt.show()
+
+
+
+
+
+

@@ -56,14 +56,17 @@ def e_func(r,leng):
         
         if(r[i]<=A):
             V[i]=0#1/B +( (B**2-A**2)/2 -(A**3)*(1/A-1/B))
-        if(r[i]<=0.5 and r[i]>A):
+        if(r[i]<=B and r[i]>A):
             V[i]=1/B +( (B**2-r[i]**2)/2 -(A**3)*(1/r[i]-1/B))
         if(r[i]>B):
             V[i]=+1/r[i]
     
     return V
 
-
+def e_func_sch(r):
+    Z=2
+    ro=1/(2*Z)
+    return -1/r +(1/r)*(1+r/(2*ro))*np.exp(-r/ro)
 
 """
 ----------------------------POTENTIAL FOR THE NUCLEUS---------------------------------------
@@ -86,8 +89,8 @@ plt.ylim(min(Vfs)*1.1,0)
 plt.xlabel("$ r (Fermi) $",size=15)
 plt.ylabel("$ V(r) $",size=15)
 plt.title("$ V_{FS}\ Vs.\ Coulomb  $")
-plt.savefig("comparing_potentials_nucleus.png")
 plt.legend(loc=4)
+plt.savefig("comparing_potentials_nucleus.png")
 plt.show()
 plt.close()
 
@@ -147,8 +150,34 @@ plt.ylim(0,max(Vfs)*1.1)
 plt.xlabel("$ r (Angstroms) $",size=15)
 plt.ylabel("$ V(r) $",size=15)
 plt.title("$ V_{FS}+V_e\ Vs.\ Coulomb  $")
-plt.savefig("comparing_potentials_electron.png")
 plt.legend(loc=1)
+plt.savefig("comparing_potentials_electron.png")
+
+plt.show()
+plt.close()
+
+"""
+----------------------------POTENTIAL FOR THE ELECTRON USING SCHRODINGER-------------------------------------
+"""
+
+
+
+r=np.linspace(1E-6,5,100)
+
+Vfs=-e_func_sch(r)
+
+V=1/r
+
+plt.plot(r,Vfs,"r.",label="Schrödinger solution")
+plt.plot(r,V,"k--",label="Coulomb")
+plt.xlim(min(r),max(r))
+plt.ylim(0,max(Vfs)*2)
+plt.xlabel("$ r (Angstroms) $",size=15)
+plt.ylabel("$ V(r) $",size=15)
+plt.title("$ V_{sch}\ Vs.\ Coulomb  $")
+plt.legend(loc=1)
+plt.savefig("comparing_potentials_electron_schro.png")
+
 plt.show()
 plt.close()
 
@@ -159,11 +188,11 @@ plt.close()
 
 
 
-a=0.316#E-5
-b=0.675#E-5
-r=np.linspace(1E-6,15,1000)
-B=(0.529/2)*1E5
-A=2
+a=0.316E-5
+b=0.675E-5
+r=np.linspace(1E-6,1,10000)
+B=(0.529/2)#*1E5
+A=2E-5
 
 
 
@@ -176,11 +205,11 @@ plt.plot(r,Vfs,label="finite size")
 plt.plot(r,V,label="Coulomb")
 plt.xlim(min(r),max(r))
 plt.ylim(-10,3)
-plt.xlabel("$ r (Fermi)  $",size=15)
+plt.xlabel("$ r (Angstroms)  $",size=15)
 plt.ylabel("$ V(r) $",size=15)
 plt.title("$ V_{FS}+V_e\ Vs.\ Coulomb  $")
-plt.savefig("comparing_potentials_final.png")
 plt.legend(loc=4)
+plt.savefig("comparing_potentials_final.png")
 plt.show()
 plt.close()
 
@@ -205,16 +234,20 @@ V=-1/r + F*r*factor -(alphaI*F/(factor*r)**2)
 
 Vfs=-2*nucleus_func(r,a,b) + e_func(r,len(r))+ F*r*factor -(alphaI*F/(factor*r)**2)
 
+ly=np.linspace(-70,10,len(Vfs))*(-1/B + F*B -(alphaI*F/(B)**2))
+lx=np.ones(len(Vfs))*B
+
 plt.plot(r,Vfs,label="Corrected")
-#plt.plot(r,Vfs1,label="Corrected_our")
 plt.plot(r,V,label="Uncorrected")
+plt.plot(lx,ly,"k--")
 plt.xlim(min(r),max(r))
 plt.ylim(-70,10)
 plt.xlabel("$ r (Angstroms)  $",size=15)
 plt.ylabel("$ V(r) $",size=15)
 plt.title("Full expression: $ V_{FS}+V_e\ Vs.\ Coulomb  $")
-#plt.savefig("comparing_potentials_final.png")
 plt.legend(loc=4)
+
+plt.savefig("comparing_potentials_final.png")
 plt.show()
 plt.close()
 
