@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import brentq
-from scipy import integrate
+from scipy.integrate import quad, dblquad
 
 
 alphaI=7.2
@@ -9,6 +9,10 @@ alphaN=11.08
 m=0
 Io=0.58
 B=0.51/2
+
+mu=0.0005484
+hbar=1#0.197E9
+
 
 F=0
 
@@ -36,22 +40,87 @@ def potential_schro(n):
     
     
     return -t1 - t2 + t3 + t4 - t5
+
+def kappa(n):
+
+    return np.sqrt(2*mu*potential_schro(n))/hbar
+
+'''
 F=0.01
 n=np.linspace(0.1,60,1000)
 plt.plot(n,potential_schro(n))
 plt.ylim(-0.5,0.5)
 plt.show()
+'''
 
+'''
+-----------------------------FINDING THE TURNING POINTS-----------------------------
+'''
 
+f=np.linspace(0.04,0.12,15)
 
+Turning=[]
 
-x=np.linspace(0.04,0.12,20)
-
-for i in x:
+for i in f:
     F=i
+    Turning.append([F,brentq(potential_schro,0.1,4),brentq(potential_schro,4,30)])
+    print(Turning[-1][1],Turning[-1][2])
+    print(potential_schro(Turning[-1][1]),potential_schro(Turning[-1][2]),"\n")
 
-    print("Value of F=", F)
-    print("[",brentq(potential_schro,0.1,4),",",brentq(potential_schro,4,30),"]")
+
+#print(Turning)
+
+'''
+-----------------------------INTEGRATING-----------------------------
+'''
+
+
+
+
+Time=[]
+
+def expo(n):
+    
+    func= lambda x: kappa(x)
+    
+    p1=0
+    
+    Res=[]
+    for i in range(len(n)):
+        print(quad(func,p1,n)[0])
+        
+        #Res.append(quad(funci,p1,n)[0])
+    
+#return Res#np.exp(-2*quad(funci,T1,n)[0])
+
+print(expo([0,1,2,3,4]))
+
+T1=Turning[1][1]
+#n=np.linspace(0.1,20)
+#plt.plot(n,expo(n))
+#plt.show()
+
+
+'''
+
+for i in range(len(f)):
+    
+    F=f[i]
+    
+    T1=Turning[i][1]
+    T2=Turning[i][2]
+    
+    print(T1,T2)
+    
+    func=lambda n: expo(n,T1)/kappa(n)
+    
+    Time.append(quad(func,T1,T2)[0])
+
+print(Time)
+
+
+'''
+
 
 
 
