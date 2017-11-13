@@ -42,7 +42,7 @@ EV=np.linspace(0,3E-3,300)#(-50E15,10E15,1000)*2*e#applied potential in eV
 V=EV/(2*e) #Applied potential in V
 
 
-beta=1.0/(kb*T[0])
+
     
 eta=kb*T[0]*np.log(3) #groundstate taken at 1/2 of Bose-Einsteins distribution
 mu=eta#chemical potential, no particles are added
@@ -52,7 +52,7 @@ mu=eta#chemical potential, no particles are added
 
 #Definiendo constantes de la integral usada
 
-def C1(Vo):
+def C1(Vo,beta):
     
     fact1=16.0*np.pi*m*e/(pow(h,3)*pow(beta,2)) #cambio hecho en beta
     
@@ -61,22 +61,22 @@ def C1(Vo):
     return fact1*fact2*hbar*conver/hs
 
 
-def C2(Vo):
+def C2(Vo,beta):
 
     return A/(2*np.sqrt(Vo)*pow(beta,1))# #cambio hecho en beta
 
-def C3(EV,Vo):
+def C3(EV,Vo,beta):
 
     return np.exp((mu-EV)*beta)
 
-def C4(EV,Vo):
+def C4(EV,Vo,beta):
     
     return np.exp(mu*beta)
 
 
 #Definiendo la funcion a integrar
 
-def func(x,EV):
+def func(x,EV,beta):
 
     f1=np.exp(C2()*(x+eta*pow(beta,1)))# cambio hecho en beta
     f2=np.log( (1-C3(EV)*np.exp(-x))/ (1-C4(EV)*np.exp(-x))   )
@@ -100,16 +100,17 @@ def DeT(T):
 
 J1=np.zeros(len(V))
 J2=np.zeros(len(V))
+beta=1.0/(kb*T[0])
 
-
-print("C1=", C1(Do))
-print("C2=", C2(Do))
-print("C3=", C3(EV[0],Do))
-print("C4=", C4(EV[0],Do))
+print("C1=", C1(Do,beta))
+print("C2=", C2(Do,beta))
+print("C3=", C3(EV[0],Do,beta))
+print("C4=", C4(EV[0],Do,beta))
 print("A=",A )
 
 
 for j in range(len(T)):
+    
     beta=1.0/(kb*T[j])
 
     eta=kb*T[j]*np.log(3) #groundstate taken at 1/2 of Bose-Einsteins distribution
@@ -123,7 +124,7 @@ for j in range(len(T)):
     
     DeltaT=DeT(T[j])#3.07*kb*Tc*np.sqrt(1-T[j]/Tc)
     
-    N=DeltaT/(2*g) +0.5#
+    N=DeltaT/(2*g) #+0.5#
     print("N=",N)
     
     for i in range(len(EV)):
@@ -132,8 +133,9 @@ for j in range(len(T)):
         #resultados=integrate.quad(funcion,0,np.infty)
     
         #J1[i]=area*resultados[0]
+        
     
-        J2[i]=N*area*C1(Vo)*np.exp(beta*(C2(Vo)*eta+mu))*(1-np.exp(-beta*EV[i]))/(1-C2(Vo))
+        J2[i]=N*area*C1(Vo,beta)*np.exp(beta*(C2(Vo,beta)*eta+mu))*(1-np.exp(-beta*EV[i]))/(1-C2(Vo,beta))
 
     plt.plot(EV,J2,label=l)
 
@@ -151,7 +153,7 @@ plt.show()
 plt.close()
 
 
-T=[9,9.1,9.2,9.24]
+T=[9,9.1,9.2,9.24,9.249]
 
 for j in range(len(T)):
     beta=1.0/(kb*T[j])
@@ -167,7 +169,7 @@ for j in range(len(T)):
     
     DeltaT=3.07*kb*Tc*np.sqrt(1-T[j]/Tc)
     
-    N=DeltaT/(2*g) +0.5#
+    N=DeltaT/(2*g) #+0.5#
     print("N=",N)
     
     for i in range(len(EV)):
@@ -177,7 +179,7 @@ for j in range(len(T)):
         
         #J1[i]=area*resultados[0]
         
-        J2[i]=N*area*C1(Vo)*np.exp(beta*(C2(Vo)*eta+mu))*(1-np.exp(-beta*EV[i]))/(1-C2(Vo))
+        J2[i]=N*area*C1(Vo,beta)*np.exp(beta*(C2(Vo,beta)*eta+mu))*(1-np.exp(-beta*EV[i]))/(1-C2(Vo,beta))
 
     plt.plot(EV,J2,label=l)
 
