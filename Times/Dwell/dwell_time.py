@@ -15,9 +15,8 @@ mu=1 #a.u.
 hbar=1 #a.u.
 Z=2
 
-Factor=24.18884
+Factor=24.18884 #time[as]/a.u.
 
-#F=0
 
 
 def I(F):
@@ -26,30 +25,25 @@ def I(F):
 
 def potential(n):
     
-    
-    ro=1/(2*Z)
-    
-    b2=(Z-1)-(1+m)*np.sqrt(2*I(F))/2.0
+    b2=(Z-1)-(1+m)*np.sqrt(I(F)/2)
     
     t1= b2/(2*n)
     
     t2= n*F/8
     
-    t3= (m**2-1)/(8*n**2)
+    t3= (m**2-1)/(8*pow(n,2))
     
-    t4=  np.exp(-3/n) * (alphaI*F/n**2)
+    t4=  (alphaI*F/n**2) * np.exp(-3/n)
     
-    t5= 0
     
-    return -t1 - t2 + t3 + t4 - t5 +I(F)/4.0
+    return -t1 - t2 + t3 + t4  +I(F)/4.0
 
 
 def potential_schro(n):
     
-    
     ro=1/(2*Z)
     
-    b2=(Z-1)-(1+m)*np.sqrt(2*I(F))/2.0
+    b2=(Z-1)-(1+m)*np.sqrt(I(F)/2)
     
     t1= b2/(2*n)
     
@@ -57,7 +51,7 @@ def potential_schro(n):
     
     t3= (m**2-1)/(8*n**2)
     
-    t4=  np.exp(-3/n) * (alphaI*F/n**2)
+    t4=   (alphaI*F/n**2) * np.exp(-3/n)
     
     t5= (1/n +1/(4*ro))*np.exp(-n/(2*ro))
     
@@ -72,33 +66,42 @@ def kappa(n):
     
     return np.sqrt(2*mu*potential(n))/hbar
 
-'''
-F=0.01
-n=np.linspace(0.1,60,1000)
-plt.plot(n,potential_schro(n))
-plt.ylim(-0.5,0.5)
-plt.show()
-'''
+def k():
+    return np.sqrt(2*mu*I(F)/4)/hbar
+
+
 
 '''
 -----------------------------FINDING THE TURNING POINTS-----------------------------
 '''
 
 #f=np.linspace(0.1,0.8,15)
-f=np.linspace(0.04,0.11,15)
+f=np.linspace(0.04,0.11,10)
 
-Turning_C=[]
-Turning=[]
+Turning_C=[]#Turning points of corrected function
+Turning=[]#Turning points of uncorrected function
 FILE=open("turning_points.txt","w")
 FILE.write("#F T1C T2C T1 T2 \n")
 for i in f:
     F=i
-    Turning_C.append([F,brentq(potential_schro,0.1,2),brentq(potential_schro,2,50)])
+    Turning_C.append([F,brentq(potential_schro,0.1,2),brentq(potential_schro,10,50)])
     
-    Turning.append([F,brentq(potential,0.1,2),brentq(potential,2,50)])
+    Turning.append([F,brentq(potential,0.1,2),brentq(potential,10,50)])
     
     FILE.write(str(F)+" "+str(Turning_C[-1][1])+" "+str(Turning_C[-1][2])+" "+ str(Turning[-1][1])+" "+str(Turning[-1][2])+"\n")
     
+    if(abs(potential_schro(Turning_C[-1][1])>1E-14)):
+        print("Turning problem! in C1",str(F), potential_schro(Turning_C[-1][1]))
+    
+    if(abs(potential_schro(Turning_C[-1][2])>1E-14)):
+        print("Turning problem! in C2",str(F),potential_schro(Turning_C[-1][2]))
+
+    if(abs(potential(Turning[-1][1])>1E-14)):
+        print("Turning problem! in 1",str(F),potential(Turning[-1][1]))
+
+    if(abs(potential(Turning[-1][2])>1E-14)):
+        print("Turning problem! in 2",str(F),potential(Turning[-1][2]))
+
     #print(F,Turning_C[-1][1],Turning_C[-1][2],Turning[-1][1],Turning[-1][2])
     
     #print(potential_schro(Turning_C[-1][1]),potential_schro(Turning_C[-1][2]),potential(Turning[-1][1]),potential(Turning[-1][2]),"\n")
@@ -170,6 +173,9 @@ for i in range(len(f)):
     Time.append(Factor*quad(func,T1,T2)[0]/exponencial)
     Time_C.append(Factor*quad(func_C,T1_C,T2_C)[0]/exponencial_C)
 
+    print(i)
+
+
 
 
 plt.plot(f,Time,"k",label="uncorrected")
@@ -210,7 +216,6 @@ for i in range(len(f)):
     T_C.append(Factor*quad(func_C,T1_C,T2_C)[0])
 
 
-
 plt.plot(f,T,"k",label="uncorrected")
 plt.plot(f,T_C,"k--",label="corrected")
 plt.ylabel("Time [as]")
@@ -225,15 +230,28 @@ plt.close()
 W_alex=[8.73,10.19,11.96,13.55,15.76,17.22,19.08,20.85]
 T_alex=[34.30,39.83,46.29,51.85,60.15,65.68,73.04,79.50]
 
+plt.plot(W,f,label="Width with uncorrected")
+plt.plot(W_C,f,label="Width with corrected")
+plt.xlabel("Barrier width")
+plt.ylabel("Field")
+plt.legend()
+plt.show()
+plt.close()
 
-#plt.plot(W,T,label="Unconrrected")
-#plt.plot(W_C,T_C,label="Corrected")
+
+
+plt.plot(W,Time,label="Unconrrected")
+plt.plot(W_C,Time_C,label="Corrected")
 plt.plot(W_alex,T_alex,label="Alex")
 plt.xlabel("Barrier width")
 plt.ylabel("Time[as]")
 plt.legend()
 plt.show()
 plt.close()
+
+
+
+
 
 
 
