@@ -41,7 +41,7 @@ def potential(n):
 
 def potential_schro(n):
     
-    ro=1/(2*Z)
+    ro=1.0/(2*Z)
     
     b2=(Z-1)-(1+m)*np.sqrt(I(F)/2)
     
@@ -84,9 +84,9 @@ FILE=open("turning_points.txt","w")
 FILE.write("#F T1C T2C T1 T2 \n")
 for i in f:
     F=i
-    Turning_C.append([F,brentq(potential_schro,0.1,2),brentq(potential_schro,10,50)])
+    Turning_C.append([F,brentq(potential_schro,0.1,2),brentq(potential_schro,10,100)])
     
-    Turning.append([F,brentq(potential,0.1,2),brentq(potential,10,50)])
+    Turning.append([F,brentq(potential,0.1,2),brentq(potential,10,100)])
     
     FILE.write(str(F)+" "+str(Turning_C[-1][1])+" "+str(Turning_C[-1][2])+" "+ str(Turning[-1][1])+" "+str(Turning[-1][2])+"\n")
     
@@ -126,7 +126,7 @@ def inte_exp(T1,T2):
 
 
 def inte_num_C(x):
-    
+
     func=lambda y: kappa_C(y)
     return (np.exp(-2*quad(func,T1_C,x)[0]))
 
