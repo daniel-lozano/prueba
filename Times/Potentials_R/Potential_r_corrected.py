@@ -75,7 +75,7 @@ def e_func_sch(r):
 """
 a=0.316E-5
 b=0.675E-5
-r=np.linspace(0.001,8,1000)
+r=np.linspace(0.01,5,1000)
 B=(0.529/2)#*1E5
 A=0#2E-5
 F=-1

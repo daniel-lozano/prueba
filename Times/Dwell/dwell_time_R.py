@@ -23,70 +23,54 @@ def I(F):
     
     return Io + ((alphaN-alphaI)*F**2)/(2)
 
-def potential(n):
+def potential(r):
     
-    b2=(Z-1)-(1+m)*np.sqrt(I(F)/2)
-    
-    t1= b2/(2*n)
-    
-    t2= n*F/8
-    
-    t3= (m**2-1)/(8*pow(n,2))
-    
-    t4=  (alphaI*F/n**2) * np.exp(-3/n)
-    
-    
-    return -t1 - t2 + t3 + t4  +I(F)/4.0
-
-
-def potential_schro(n):
-    
+    Z=2.0
     ro=1.0/(2*Z)
-    
-    b2=(Z-1)-(1+m)*np.sqrt(I(F)/2)
-    
-    t1= b2/(2*n)
-    
-    t2= n*F/8
-    
-    t3= (m**2-1)/(8*n**2)
-    
-    t4=   (alphaI*F/n**2) * np.exp(-3/n)
-    
-    t5= (1/n +1/(4*ro))*np.exp(-n/(2*ro))
-    
-    
-    return -t1 - t2 + t3 + t4 - t5 +I(F)/4.0
+    return -(Z-1)/r  + F*r*np.cos(theta) -(np.cos(theta)*alphaI*F/(r)**2)*np.exp(-3/r) +I(F)
 
-def kappa_C(n):
 
-    return np.sqrt(2*mu*potential_schro(n))/hbar
-
-def kappa(n):
+def potential_schro(r):
     
-    return np.sqrt(2*mu*potential(n))/hbar
+    Z=2.0
+    ro=1.0/(2*Z)
+    return -(Z-1)/r -(1/r)*(1+r/(2*ro))*np.exp(-r/ro)  + F*r*np.cos(theta) -(np.cos(theta)*alphaI*F/(r)**2)*np.exp(-3/r) +I(F)
+
+def kappa_C(r,F,theta):
+
+    return np.sqrt(2*mu*potential_schro(r))/hbar
+
+def kappa(r,F,theta):
+    
+    return np.sqrt(2*mu*potential(r))/hbar
 
 def k():
     return np.sqrt(2*mu*I(F)/4)/hbar
 
 
-
 '''
+r1=np.linspace(0.5,10)
+f1=[0.04,0.06,0.08,0.10,0.11]*-1
+theta=0
+F=f1[0]
+plt.plot(r1,potential_schro(r1))
+
+
+
 -----------------------------FINDING THE TURNING POINTS-----------------------------
-'''
 
-#f=np.linspace(0.1,0.8,15)
+
 f=np.linspace(0.04,0.11,10)
-
+theta=0
 Turning_C=[]#Turning points of corrected function
 Turning=[]#Turning points of uncorrected function
-FILE=open("turning_points.txt","w")
+FILE=open("turning_points_R.txt","w")
 FILE.write("#F T1C T2C T1 T2 \n")
 for i in f:
     F=i
-    Turning_C.append([F,brentq(potential_schro,0.1,2),brentq(potential_schro,10,100)])
+    Turning_C.append([F,brentq(potential_schro,0.1,4),brentq(potential_schro,10,100)])
     
-    Turning.append([F,brentq(potential,0.1,2),brentq(potential,10,100)])
+    Turning.append([F,brentq(potential,0.1,4),brentq(potential,10,100)])
     
     FILE.write(str(F)+" "+str(Turning_C[-1][1])+" "+str(Turning_C[-1][2])+" "+ str(Turning[-1][1])+" "+str(Turning[-1][2])+"\n")
     
@@ -109,9 +93,9 @@ for i in f:
 FILE.close()
 #print(Turning)
 
-'''
------------------------------INTEGRATING-----------------------------
-'''
+
+#-----------------------------INTEGRATING-----------------------------
+
 
 
 def inte_num(x):
@@ -143,9 +127,8 @@ W=[]
 W_C=[]
 
 
-'''
-DWELL TIME___________________________________________________________
-'''
+#DWELL TIME___________________________________________________________
+
 
 
 
@@ -155,11 +138,11 @@ for i in range(len(f)):
     
     T1=Turning[i][1]
     T2=Turning[i][2]
-    W.append((T2-T1)/2.0)
+    W.append((T2-T1))
     
     T1_C=Turning_C[i][1]
     T2_C=Turning_C[i][2]
-    W_C.append((T2_C-T1_C)/2.0)
+    W_C.append((T2_C-T1_C))
     
     #print(T1,T2)
     
@@ -188,9 +171,9 @@ plt.savefig("dwell_time.png")
 plt.show()
 plt.close()
 
-'''
-TRAVERSAL TIME___________________________________________________________
-'''
+
+#TRAVERSAL TIME___________________________________________________________
+
 
 
 T=[]
@@ -250,7 +233,7 @@ plt.show()
 plt.close()
 
 
-
+'''
 
 
 
