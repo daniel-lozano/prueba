@@ -36,62 +36,83 @@ def potential_schro(r):
     ro=1.0/(2*Z)
     return -(Z-1)/r -(1/r)*(1+r/(2*ro))*np.exp(-r/ro)  + F*r*np.cos(theta) -(np.cos(theta)*alphaI*F/(r)**2)*np.exp(-3/r) +I(F)
 
-def kappa_C(r,F,theta):
+def kappa_C(r):
 
-    return np.sqrt(2*mu*potential_schro(r))/hbar
+    return np.sqrt(2*mu*abs(potential_schro(r)))/hbar
 
-def kappa(r,F,theta):
+def kappa(r):
     
-    return np.sqrt(2*mu*potential(r))/hbar
+    return np.sqrt(2*mu*abs(potential(r)))/hbar
 
 def k():
     return np.sqrt(2*mu*I(F)/4)/hbar
 
 
-'''
-r1=np.linspace(0.5,10)
-f1=[0.04,0.06,0.08,0.10,0.11]*-1
-theta=0
-F=f1[0]
-plt.plot(r1,potential_schro(r1))
+r1=np.linspace(0.5,100,1000)
+
+f1=[0.04,0.06,0.08,0.10,0.11]
+
+theta=np.pi/3
+THETA=[0,30,45,60,90,120,135,150,180]
+for i in range(len(THETA)):
+    F=0.11
+    theta=THETA[i]*np.pi/180
+    ones=np.ones(len(r1))*-I(F)
+    func=potential_schro(r1)-I(F)
+    plt.plot(r1,func,label=str(THETA[i]))
+    plt.legend()
+    plt.plot(r1,ones)
+
+plt.ylim(-1,0.55)
+plt.xlim(0,50)
+plt.xlabel("r")
+plt.ylabel("V(r)")
+plt.title("Potential with different angles")
+plt.savefig("potential_with_theta.png")
+plt.show()
 
 
 
------------------------------FINDING THE TURNING POINTS-----------------------------
+
+#-----------------------------FINDING THE TURNING POINTS-----------------------------
 
 
-f=np.linspace(0.04,0.11,10)
-theta=0
+f=np.linspace(0.04,0.11,8)
+theta=4*np.pi/6
+
+
 Turning_C=[]#Turning points of corrected function
 Turning=[]#Turning points of uncorrected function
+
 FILE=open("turning_points_R.txt","w")
 FILE.write("#F T1C T2C T1 T2 \n")
+
 for i in f:
     F=i
-    Turning_C.append([F,brentq(potential_schro,0.1,4),brentq(potential_schro,10,100)])
+    Turning_C.append([F,brentq(potential_schro,0.1,4),brentq(potential_schro,5,50)])
     
-    Turning.append([F,brentq(potential,0.1,4),brentq(potential,10,100)])
+    Turning.append([F,brentq(potential,0.1,4),brentq(potential,5,50)])
     
     FILE.write(str(F)+" "+str(Turning_C[-1][1])+" "+str(Turning_C[-1][2])+" "+ str(Turning[-1][1])+" "+str(Turning[-1][2])+"\n")
     
-    if(abs(potential_schro(Turning_C[-1][1])>1E-14)):
-        print("Turning problem! in C1",str(F), potential_schro(Turning_C[-1][1]))
     
-    if(abs(potential_schro(Turning_C[-1][2])>1E-14)):
-        print("Turning problem! in C2",str(F),potential_schro(Turning_C[-1][2]))
-
-    if(abs(potential(Turning[-1][1])>1E-14)):
-        print("Turning problem! in 1",str(F),potential(Turning[-1][1]))
-
-    if(abs(potential(Turning[-1][2])>1E-14)):
-        print("Turning problem! in 2",str(F),potential(Turning[-1][2]))
-
-    #print(F,Turning_C[-1][1],Turning_C[-1][2],Turning[-1][1],Turning[-1][2])
     
-    #print(potential_schro(Turning_C[-1][1]),potential_schro(Turning_C[-1][2]),potential(Turning[-1][1]),potential(Turning[-1][2]),"\n")
+    #if(abs(potential_schro(Turning_C[-1][1])>1E-14)):
+    #    print("Turning problem! in C1",str(F), potential_schro(Turning_C[-1][1]))
+    
+    #if(abs(potential_schro(Turning_C[-1][2])>1E-14)):
+    #    print("Turning problem! in C2",str(F),potential_schro(Turning_C[-1][2]))
+
+    #if(abs(potential(Turning[-1][1])>1E-14)):
+    #    print("Turning problem! in 1",str(F),potential(Turning[-1][1]))
+
+    #if(abs(potential(Turning[-1][2])>1E-14)):
+    #    print("Turning problem! in 2",str(F),potential(Turning[-1][2]))
+    
 
 FILE.close()
 #print(Turning)
+
 
 
 #-----------------------------INTEGRATING-----------------------------
@@ -130,7 +151,7 @@ W_C=[]
 #DWELL TIME___________________________________________________________
 
 
-
+#'''
 
 for i in range(len(f)):
     
@@ -165,9 +186,10 @@ plt.plot(f,Time,"k",label="uncorrected")
 plt.plot(f,Time_C,"k--",label="corrected")
 plt.ylabel("Time [as]")
 plt.xlabel("Field (a.u)")
-plt.title("Dwell time")
+#plt.ylim(0,200)
+plt.title("Dwell time (in R), theta="+str(theta*180/np.pi))
 plt.legend()
-plt.savefig("dwell_time.png")
+plt.savefig("dwell_time_R_"+str(theta*180/np.pi)+".png")
 plt.show()
 plt.close()
 
@@ -184,11 +206,11 @@ for i in range(len(f)):
     
     F=f[i]
     
-    T1=Turning[i][1]
-    T2=Turning[i][2]
+    T1=0#Turning[i][1]
+    T2=Turning[i][1]#Turning[i][2]
     
-    T1_C=Turning_C[i][1]
-    T2_C=Turning_C[i][2]
+    T1_C=0#Turning_C[i][1]
+    T2_C=Turning_C[i][1]#Turning_C[i][2]
     
     #print(T1,T2)
     
@@ -203,9 +225,9 @@ plt.plot(f,T,"k",label="uncorrected")
 plt.plot(f,T_C,"k--",label="corrected")
 plt.ylabel("Time [as]")
 plt.xlabel("Field (a.u)")
-plt.title("Traversal time")
+plt.title("Traversal time (in R)")
 plt.legend()
-plt.savefig("traversal_time.png")
+plt.savefig("traversal_time_R.png")
 plt.show()
 plt.close()
 
@@ -232,8 +254,8 @@ plt.legend()
 plt.show()
 plt.close()
 
+#'''
 
-'''
 
 
 
