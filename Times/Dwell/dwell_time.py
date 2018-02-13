@@ -60,11 +60,11 @@ def potential_schro(n):
 
 def kappa_C(n):
 
-    return np.sqrt(2*mu*potential_schro(n))/hbar
+    return np.sqrt(2*mu*abs(potential_schro(n)))/hbar
 
 def kappa(n):
     
-    return np.sqrt(2*mu*potential(n))/hbar
+    return np.sqrt(2*mu*abs(potential(n)))/hbar
 
 def k():
     return np.sqrt(2*mu*I(F)/4)/hbar
@@ -155,11 +155,11 @@ for i in range(len(f)):
     
     T1=Turning[i][1]
     T2=Turning[i][2]
-    W.append((T2-T1)/2.0)
+    W.append((T2-T1)/1.0)
     
     T1_C=Turning_C[i][1]
     T2_C=Turning_C[i][2]
-    W_C.append((T2_C-T1_C)/2.0)
+    W_C.append((T2_C-T1_C)/1.0)
     
     #print(T1,T2)
     
@@ -201,23 +201,26 @@ for i in range(len(f)):
     
     F=f[i]
     
-    T1=Turning[i][1]
-    T2=Turning[i][2]
+    T1=0#Turning[i][1]
+    T2=Turning[i][1]#
     
-    T1_C=Turning_C[i][1]
-    T2_C=Turning_C[i][2]
+    T1_C=0#Turning_C[i][1]
+    T2_C=Turning_C[i][1]#
     
     #print(T1,T2)
     
     func=lambda x: (1/kappa(x))
     func_C=lambda x: (1/kappa_C(x))
     
-    T.append(Factor*quad(func,T1,T2)[0])
-    T_C.append(Factor*quad(func_C,T1_C,T2_C)[0])
+    T.append(2*Factor*quad(func,T1,T2)[0])
+    T_C.append(2*Factor*quad(func_C,T1_C,T2_C)[0])
 
 
-plt.plot(f,T,"k",label="uncorrected")
-plt.plot(f,T_C,"k--",label="corrected")
+
+plt.plot(f,Time,"k",label="Region 2: uncorrected")
+plt.plot(f,Time_C,"k--",label="Region 2: corrected")
+plt.plot(f,T,"k",label="Region 1: uncorrected")
+plt.plot(f,T_C,"k--",label="Region 1: corrected")
 plt.ylabel("Time [as]")
 plt.xlabel("Field (a.u)")
 plt.title("Traversal time")

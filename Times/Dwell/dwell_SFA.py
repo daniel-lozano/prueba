@@ -182,11 +182,11 @@ for i in range(len(f)):
     
     T1=Turning[i][1]
     T2=Turning[i][2]
-    W.append((T2-T1)/2.0)
+    W.append((T2-T1)/1.0)
     
     T1_C=Turning_C[i][1]
     T2_C=Turning_C[i][2]
-    W_C.append((T2_C-T1_C)/2.0)
+    W_C.append((T2_C-T1_C)/1.0)
     
     T1_T=0
     T2_T=I(F)/(A*F)
