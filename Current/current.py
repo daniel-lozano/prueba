@@ -20,15 +20,16 @@ kb=8.6E-5# eV/Kelvin/e
 T=[1,2,4,5]#9.2#4 Kelvin
 Tc=9.25 #Kelvin
 
-g=1E-3 #eV/e
+g=(1.0/(92*2000))**2#(m/M)**2
 
 
 
 print("dx=",dx, "Angstroms")
-print("Deltao=",Do, "eV")
+print("Delta_o=",Do, "eV")
 print("m=",m,"eV")
 print("hbar=",hbar,"eV*Angstrom")
 print("e=",e,"Coulomb")
+print("g=",g,"Coupling constant")
 
 A=4*np.pi*np.sqrt(4*m)*dx/h #constante definida
 
@@ -124,7 +125,7 @@ for j in range(len(T)):
     
     DeltaT=DeT(T[j])#3.07*kb*Tc*np.sqrt(1-T[j]/Tc)
     
-    N=DeltaT/(2*g) #+0.5#
+    N=DeltaT/(2.0*g) #+0.5#
     print("N=",N)
     
     for i in range(len(EV)):

@@ -14,7 +14,7 @@ h=2*np.pi*hbar # eV*Angstrom
 hs=6.5E-16 # eV s
 kb=8.6E-5# eV/Kelvin/e
 Tc=9.25 #Kelvin
-g=1E-3 #eV/e
+g=(1.0/(92*2000))**2#(m/M)**2
 
 
 
@@ -31,13 +31,13 @@ area=346*375 #microns squared
 conver=1E8#angstroms to microns
 
 
-EV=[0.0005,0.001,0.002,0.003]#(-50E15,10E15,1000)*2*e#applied potential in eV
+EV=[0.0005,0.001,0.003,0.005]#(-50E15,10E15,1000)*2*e#applied potential in eV
 
 #V=EV*(1/(2*e)) #Applied potential in V
 
 T=np.linspace(0.1,1.0,10000)
 J2=np.zeros(len(T))
-g=1E-3
+
 
 eta=kb*T[0]*np.log(3) #groundstate taken at 1/2 of Bose-Einsteins distribution
 mu=eta#chemical potential, no particles are added
