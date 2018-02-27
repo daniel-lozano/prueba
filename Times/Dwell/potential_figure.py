@@ -210,22 +210,24 @@ for i in f:
     
     print(F,Turning[-1][1],Turning[-1][2])
 
-
-pos=9
-F=f[pos]
 x_plot=np.linspace(0.5,x[-1],100)
+'''
+for i in range(len(f)):
+    pos=i
+    F=f[pos]
+    
 
-potential_plot=potential(x_plot)-I(F)/4.0
-energy_plot=-I(F)/4.0-DE_func(Turning[pos][1],x_plot,Turning[pos][2])
-plt.plot(x_plot,potential_plot)
-plt.plot(x_plot,energy_plot)
-plt.title(str(F))
-plt.xlim(0,20)
+    potential_plot=potential(x_plot)-I(F)/4.0
+    energy_plot=-I(F)/4.0-DE_func(Turning[pos][1],x_plot,Turning[pos][2])
+    plt.plot(x_plot,potential_plot)
+    plt.plot(x_plot,energy_plot)
+    plt.title(str(F))
+    plt.xlim(0,x_plot,Turning[pos][2]+1)
 
-plt.show()
+    plt.show()
 
-plt.close()
-
+    plt.close()
+'''
 
 
 
@@ -266,98 +268,36 @@ Time_ave=[]
 Time_ave_C=[]
 W=[]
 W_C=[]
-DE=np.zeros(len(f))
-TE=np.zeros(len(f))
+
 
 #----------Total Dissipative Energy---------------------------------
 
+LAB=["k","b","r","g","c","y","m"]
 
-for i in [0,3,6]:#range(len(f)):
-    
-    F=f[i]
-    TE=np.ones(len(x_plot))*I(F)/4.0
-    DE=DE_func(Turning_C[i][1],x_plot,Turning_C[i][2])
-    plt.plot(x_plot,DE,label=str(F))
-    plt.plot(x_plot,TE,"--",label="TE,F="+str(F))
-
-
-
-plt.title("$ \mathrm{Dissipation\ in }\ \eta  $")
-plt.xlabel("$ \eta\  \mathrm{(a.u.)} $")
-plt.ylabel("$ \Delta E(\eta)\  \mathrm{(a.u.)} $")
-plt.legend()
-plt.savefig("Energy_lost.png")
-plt.show()
-plt.close()
-
-
-
-
-
-#DWELL TIME___________________________________________________________
-
-
-#
 for i in range(len(f)):
-    
-    F=f[i]
-    D=DE[i]
-    
-    T1=Turning[i][1]
-    T2=Turning[i][2]
-    W.append((T2-T1)/1.0)
-    
-    T1_C=Turning_C[i][1]
-    T2_C=Turning_C[i][2]
-    W_C.append((T2_C-T1_C)/1.0)
-    
-    #print(T1,T2)
-    
-    func=lambda x: (1/disip_kappa(x))*inte_num(x)
-    #func_C=lambda x: (1/disip_kappa_C(x))*inte_num_C(x)
-    
-    average_dt=Factor*quad(func,T1,T2)[0]
-    #average_dt_C=Factor*quad(func_C,T1_C,T2_C)[0]
-    
-    Time_ave.append(average_dt)
-    #Time_ave_C.append(average_dt_C)
-    
-    #exponencial=inte_exp(T1,T2)
-    #exponencial_C=inte_exp_C(T1_C,T2_C)
-    #Time.append(average_dt/exponencial)
-    #Time_C.append(average_dt_C/exponencial_C)
-    #print(F,exponencial,exponencial_C)
-    
-    
-    if(i%1==0):
-        print(i)
+    pos=i
+    F=f[pos]
+    TE=np.ones(len(x_plot))*(-I(F)/4.0)-DE_func(Turning[pos][1],x_plot,Turning[pos][2])
+    POT=potential(x_plot)-I(F)/4.0
+    plt.plot(x_plot,POT,LAB[i],label="F="+str(F))
+    plt.plot(x_plot,TE,LAB[i]+"--")
+    plt.legend(loc=1)
+    plt.xlim(0,80)
+    plt.ylim(-0.5,0)
+    plt.xlabel("$\eta\ \mathrm{(a.u.)} $")
+    plt.ylabel("$ V(\eta),\ E(\eta)\ \mathrm{(a.u.)} $")
 
-
-
-
-
-plt.plot(f,Time_ave,"k",label="uncorrected")
-plt.plot(f,Time_ave_C,"k--",label="corrected")
-plt.ylabel("Time [as]")
-plt.xlabel("Field (a.u)")
-plt.title("Average dwell time")
-plt.legend()
-plt.savefig("average_disip.png")
-plt.show()
-plt.close()
-#
-'''
-plt.plot(f,Time,"k",label="uncorrected")
-plt.plot(f,Time_C,"k--",label="corrected")
-plt.ylabel("Time [as]")
-plt.xlabel("Field (a.u)")
-plt.title("Transmission dwell time")
-plt.legend()
-plt.savefig("transmission_disip.png")
+plt.savefig("true_system.png")
 plt.show()
 plt.close()
 
-'''
+
+
+
+
+
+
+
 
 
 
