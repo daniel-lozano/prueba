@@ -90,41 +90,74 @@ def kappa(n):
 def k():
     return np.sqrt(2*mu*I(F)/4)/hbar
 
-def DE_func(T1,x):
+def DE_func(T1,x,T2):
     
     RES=np.zeros(len(x))
     
     for i in range(len(x)):
         func= lambda n: gamma*kappa(n)*hbar/mu
-        RES[i]=quad(func,T1,x[i])[0]
+        if(x[i]>T1):
+            
+            RES[i]=quad(func,T1,x[i])[0]
+        if(x[i]<=T1 or x[i]>T2):
+            RES[i]=quad(func,T1,T2)[0]
+
     return RES
 
-def DE_func_C(T1,T2):
+def DE_func_num(T1,x):
     
-    func= lambda n: gamma*kappa_C(n)*hbar/mu
-    return quad(func,T1,T2)[0]
+    
+    if(x>T1):
+        func= lambda n: gamma*kappa(n)*hbar/mu
+        return quad(func,T1,x)[0]
+    if(x<=T1):
+        return 0
+
+
+def DE_func_C(T1_C,x,T2_C):
+    
+    RES_C=np.zeros(len(x))
+    
+    for i in range(len(x)):
+        func= lambda n: gamma*kappa_C(n)*hbar/mu
+        if(x[i]>T1_C):
+            
+            RES_C[i]=quad(func,T1_C,x[i])[0]
+        if(x[i]<=T1_C or x[i]>T2_C):
+            RES_C[i]=quad(func,T1_C,T2_C)[0]
+
+    return RES_C
+
+def DE_func_num_C(T1_C,x):
+    
+    if(x>T1_C):
+        func= lambda n: gamma*kappa_C(n)*hbar/mu
+        return quad(func,T1_C,x)[0]
+    if(x<=T1_C):
+        return 0
+
 
 
 #-------------------Dissipation--------------------------------
 
 
-def disip_potential(n,T1):
+def disip_potential(n):
     
-    return potential(n)+DE_func(T1,n)
+    return potential(n)+DE_func_num(T1,n)
 
-def disip_potential_C(n,T1):
+def disip_potential_C(n):
     
-    return potential_schro(n)+ DE_func_C(T1,n)
+    return potential_schro(n)+ DE_func_num_C(T1_C,n)
 
 #---------------- Dissipative potential--------------------------
 
-def disip_kappa(n,T1):
+def disip_kappa(n):
     
-    return np.sqrt(2*mu*abs(disip_potential(n,T1)))/hbar
+    return np.sqrt(2*mu*abs(disip_potential(n)))/hbar
 
-def disip_kappa_C(n,T1):
+def disip_kappa_C(n):
     
-    return np.sqrt(2*mu*abs(disip_potential_C(n,T1)))/hbar
+    return np.sqrt(2*mu*abs(disip_potential_C(n)))/hbar
 
 
 #-----------------Funcion para encontrar el punto de retorno ------
@@ -138,7 +171,7 @@ def find(func,x):
 #-----------------------------FINDING THE FIRST TURNING POINTS-----------------------------
 
 #f=np.linspace(0.1,0.8,15)
-f=np.linspace(0.04,0.11,5)
+f=np.linspace(0.04,0.11,10)
 x=np.linspace(0.1,100)
 
 Turning_C=[]#Turning points of corrected function
@@ -147,32 +180,33 @@ Turning=[]#Turning points of uncorrected function
 for i in f:
     F=i
     
-    RETURN1=find(potential_schro(x),x)#2
-    RETURN2=find(potential(x),x)#2
+    RETURN1_C=find(potential_schro(x),x)#2
+    RETURN1=find(potential(x),x)#2
     
-    Turning_C.append([F,brentq(potential_schro,0.1,RETURN1),0])
+    Turning_C.append([F,brentq(potential_schro,0.1,RETURN1_C),0])
     
-    Turning.append([F,brentq(potential,0.1,RETURN2),0])
+    Turning.append([F,brentq(potential,0.1,RETURN1),0])
     
-    #posibles errores grandes
+   
+   
+    T1=Turning[-1][1]
+    T1_C=Turning_C[-1][1]
+
+
+    Turning[-1][2]=brentq(disip_potential,RETURN1,100)
+    Turning_C[-1][2]=brentq(disip_potential_C,RETURN1_C,100)
     
-    if(abs(potential_schro(Turning_C[-1][1])>1E-5)):
-        print("Turning problem! in C1",str(F), potential_schro(Turning_C[-1][1]))
-
-    if(abs(potential(Turning[-1][1])>1E-5)):
-        print("Turning problem! in 1",str(F),potential(Turning[-1][1]))
+    print(F,Turning[-1][1],Turning[-1][2])
 
 
-    print(Turning_C[-1][1],Turning[-1][1])
-
-
-pos=0
+pos=9
 F=f[pos]
-x_plot=np.linspace(Turning[pos][1],x[-1])
+x_plot=np.linspace(0.5,x[-1])
 potential_plot=potential(x_plot)-I(F)/4.0
-energy_plot=-I(F)/4.0-DE_func(Turning[-1][1],x_plot)
+energy_plot=-I(F)/4.0-DE_func(Turning[pos][1],x_plot,Turning[pos][2])
 plt.plot(x_plot,potential_plot)
 plt.plot(x_plot,energy_plot)
+plt.title(str(F))
 
 plt.show()
 
