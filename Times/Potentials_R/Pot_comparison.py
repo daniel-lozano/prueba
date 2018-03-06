@@ -64,7 +64,7 @@ def e_func(r,leng):
     return V
 
 def e_func_sch(r):
-    Z=2
+    Z=2.0
     ro=1/(2*Z)
     return -1/r +(1/r)*(1+r/(2*ro))*np.exp(-r/ro)
 
@@ -162,16 +162,16 @@ plt.close()
 
 
 
-r=np.linspace(1E-6,5,100)
+r=np.linspace(1E-1,5,100)
 
 Vfs=-e_func_sch(r)
 
 V=1/r
 
-plt.plot(r,Vfs,"r.",label="Schrödinger solution")
+plt.plot(r,Vfs,"r.",label="Schrodinger solution")
 plt.plot(r,V,"k--",label="Coulomb")
 plt.xlim(min(r),max(r))
-plt.ylim(0,max(Vfs)*2)
+plt.ylim(0,4)
 plt.xlabel("$ r (Angstroms) $",size=15)
 plt.ylabel("$ V(r) $",size=15)
 plt.title("$ V_{sch}\ Vs.\ Coulomb  $")

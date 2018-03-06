@@ -3,25 +3,37 @@ import matplotlib.pyplot as plt
 from scipy.optimize import brentq
 from scipy.integrate import quad, dblquad
 
+from sys import argv
+
 
 
 alphaI=0.28125
 alphaN=1.38
 m=0
-Io=0.904
+Io=0.904#
 B=0.51/2
 
 mu=1 #a.u.
 hbar=1 #a.u.
+
+h=2.0*np.pi
+c=137.0
+lam=735.0/0.0529
+
 Z=2
+omega=h*c/lam#
+number=float(argv[1])
+print("omega=",omega)
 
 Factor=24.18884 #time[as]/a.u.
-
-
 
 def I(F):
     
     return Io + ((alphaN-alphaI)*F**2)/(2)
+
+def I_mod(F):
+    
+    return Io + ((alphaN-alphaI)*F**2)/(2) - omega*number
 
 def potential(n):
     
@@ -36,7 +48,7 @@ def potential(n):
     t4=  (alphaI*F/n**2) * np.exp(-3/n)
     
     
-    return -t1 - t2 + t3 + t4  +I(F)/4.0
+    return -t1 - t2 + t3 + t4  +I_mod(F)/4.0
 
 
 def potential_schro(n):
@@ -56,7 +68,7 @@ def potential_schro(n):
     t5= (1/n +1/(4*ro))*np.exp(-n/(2*ro))
     
     
-    return -t1 - t2 + t3 + t4 - t5 +I(F)/4.0
+    return -t1 - t2 + t3 + t4 - t5 +I_mod(F)/4.0
 
 def kappa_C(n):
 
@@ -69,6 +81,11 @@ def kappa(n):
 def k():
     return np.sqrt(2*mu*I(F)/4)/hbar
 
+#encontrar el punto de retorno
+def find(func,x):
+    for i in range(len(func)):
+        if(func[i]>0):
+            return x[i]
 
 
 '''
@@ -77,34 +94,48 @@ def k():
 
 #f=np.linspace(0.1,0.8,15)
 f=np.linspace(0.04,0.11,10)
+x=np.linspace(0.1,20)
 
 Turning_C=[]#Turning points of corrected function
 Turning=[]#Turning points of uncorrected function
 FILE=open("turning_points.txt","w")
 FILE.write("#F T1C T2C T1 T2 \n")
+
+
 for i in f:
-    F=i
-    Turning_C.append([F,brentq(potential_schro,0.1,2),brentq(potential_schro,10,100)])
     
-    Turning.append([F,brentq(potential,0.1,2),brentq(potential,10,100)])
+    
+    
+    F=i
+    
+    keldish=omega*np.sqrt(2*(I(F)))/F
+    print("F=",round(F,3),"gamma_k=",round(keldish,3))
+    
+    
+    RETURN1=find(potential_schro(x),x)#2
+    RETURN2=find(potential(x),x)#2
+    
+    Turning_C.append([F,brentq(potential_schro,0.1,RETURN1),brentq(potential_schro,RETURN1,100)])
+    
+    Turning.append([F,brentq(potential,0.1,RETURN2),brentq(potential,RETURN2,100)])
     
     FILE.write(str(F)+" "+str(Turning_C[-1][1])+" "+str(Turning_C[-1][2])+" "+ str(Turning[-1][1])+" "+str(Turning[-1][2])+"\n")
     
-    if(abs(potential_schro(Turning_C[-1][1])>1E-14)):
+    #posibles errores grandes
+    
+    if(abs(potential_schro(Turning_C[-1][1])>1E-10)):
         print("Turning problem! in C1",str(F), potential_schro(Turning_C[-1][1]))
     
-    if(abs(potential_schro(Turning_C[-1][2])>1E-14)):
+    if(abs(potential_schro(Turning_C[-1][2])>1E-10)):
         print("Turning problem! in C2",str(F),potential_schro(Turning_C[-1][2]))
 
-    if(abs(potential(Turning[-1][1])>1E-14)):
+    if(abs(potential(Turning[-1][1])>1E-10)):
         print("Turning problem! in 1",str(F),potential(Turning[-1][1]))
 
-    if(abs(potential(Turning[-1][2])>1E-14)):
+    if(abs(potential(Turning[-1][2])>1E-10)):
         print("Turning problem! in 2",str(F),potential(Turning[-1][2]))
 
-    #print(F,Turning_C[-1][1],Turning_C[-1][2],Turning[-1][1],Turning[-1][2])
-    
-    #print(potential_schro(Turning_C[-1][1]),potential_schro(Turning_C[-1][2]),potential(Turning[-1][1]),potential(Turning[-1][2]),"\n")
+
 
 FILE.close()
 #print(Turning)
@@ -169,24 +200,28 @@ for i in range(len(f)):
     
     exponencial=1#inte_exp(T1,T2)
     exponencial_C=1#inte_exp_C(T1_C,T2_C)
+    print(F,exponencial,exponencial_C)
     
     Time.append(Factor*quad(func,T1,T2)[0]/exponencial)
     Time_C.append(Factor*quad(func_C,T1_C,T2_C)[0]/exponencial_C)
+    
+    if(i%2==0):
+        print(i)
+        print("dif",abs(Time[-1]-Time_C[-1]))
 
-    print(i)
 
 
 
-
-plt.plot(f,Time,"k",label="uncorrected")
-plt.plot(f,Time_C,"k--",label="corrected")
+plt.semilogy(f,Time,"k",label="uncorrected")
+plt.semilogy(f,Time_C,"k--",label="corrected")
 plt.ylabel("Time [as]")
 plt.xlabel("Field (a.u)")
 plt.title("Dwell time")
 plt.legend()
-plt.savefig("dwell_time.png")
+plt.savefig("dwell_time_N="+str(argv[1])+".png")
 plt.show()
 plt.close()
+
 
 '''
 TRAVERSAL TIME___________________________________________________________
@@ -219,15 +254,54 @@ for i in range(len(f)):
 
 plt.plot(f,Time,"k",label="Region 2: uncorrected")
 plt.plot(f,Time_C,"k--",label="Region 2: corrected")
-plt.plot(f,T,"k",label="Region 1: uncorrected")
-plt.plot(f,T_C,"k--",label="Region 1: corrected")
+plt.plot(f,T,"r",label="Region 1: uncorrected")
+plt.plot(f,T_C,"r--",label="Region 1: corrected")
+plt.ylabel("Time [as]")
+plt.xlabel("Field (a.u)")
+plt.title("Traversal time and dwell time")
+plt.legend()
+#plt.savefig("traversal_time.png")
+plt.show()
+plt.close()
+
+
+
+
+T=[]
+T_C=[]
+
+
+for i in range(len(f)):
+    
+    F=f[i]
+    
+    T1=Turning[i][1]
+    T2=Turning[i][2]#
+    
+    T1_C=Turning_C[i][1]
+    T2_C=Turning_C[i][2]#
+    
+    #print(T1,T2)
+    
+    func=lambda x: (1/kappa(x))
+    func_C=lambda x: (1/kappa_C(x))
+    
+    T.append(Factor*quad(func,T1,T2)[0])
+    T_C.append(Factor*quad(func_C,T1_C,T2_C)[0])
+
+
+
+plt.plot(f,T,"r",label="Region 2: uncorrected")
+plt.plot(f,T_C,"r--",label="Region 2: corrected")
 plt.ylabel("Time [as]")
 plt.xlabel("Field (a.u)")
 plt.title("Traversal time")
 plt.legend()
-plt.savefig("traversal_time.png")
+#plt.savefig("traversal_time.png")
 plt.show()
 plt.close()
+
+
 
 
 W_alex=[8.73,10.19,11.96,13.55,15.76,17.22,19.08,20.85]

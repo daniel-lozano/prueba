@@ -111,7 +111,38 @@ for i in f:
     
 
 FILE.close()
-#print(Turning)
+#-----------------------------Dissipation added----------------------
+
+gamma=1
+Disp=np.zeros(len(f))
+Disp_C=np.zeros(len(f))
+
+
+for i in range(len(f)):
+
+    func1=lambda r: kappa(r)
+    func2=lambda r: kappa_C(r)
+    Disp[i]=gamma*quad(func1,Turning[i][1],Turning[i][2])[0]
+    Disp_C[i]=gamma*quad(func2,Turning_C[i][1],Turning_C[i][2])[0]
+
+plt.plot(f,Disp,label="Uncorrected")
+plt.plot(f,Disp_C,label="Corrected")
+plt.title("$ \mathrm{Dissipation} $")
+plt.xlabel("$ F $")
+plt.ylabel("$\Delta E$")
+plt.savefig("Dissip_R.png")
+plt.legend()
+plt.show()
+
+
+
+
+
+
+
+
+
+
 
 
 

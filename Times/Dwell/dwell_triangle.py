@@ -21,7 +21,7 @@ Factor=24.18884 #time[as]/a.u.
 
 def I(F):
     
-    return Io + ((alphaN-alphaI)*F**2)/(2)
+    return (Io + ((alphaN-alphaI)*F**2)/2.0 )
 
 def potential(n):
     
@@ -106,7 +106,7 @@ for i in range(len(f)):
     #func_C=lambda x: (1/kappa_C(x))*inte_num_C(x)
     
     
-    exponencial=inte_exp(T1,T2)
+    exponencial=1#inte_exp(T1,T2)
     #exponencial_C=1#inte_exp_C(T1_C,T2_C)
     
     Time.append(Factor*quad(func,T1,T2)[0]/exponencial)

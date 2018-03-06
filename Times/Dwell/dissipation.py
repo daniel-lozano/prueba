@@ -159,11 +159,11 @@ def DE_func_num_C(T1_C,x):
 
 def disip_potential(n):
     
-    return potential(n)+DE_func_num(T1,n)
+    return potential(n)+ DE_func_num(T1,n)
 
 def disip_potential_C(n):
     
-    return potential_schro(n)+ DE_func_num_C(T1_C,n)
+    return potential_schro(n) + DE_func_num_C(T1_C,n)
 
 #---------------- Dissipative potential--------------------------
 
