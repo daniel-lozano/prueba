@@ -195,7 +195,7 @@ plt.plot(x,interpol(x),"k--",label="interpolation")
 plt.plot(x,DE_C,label="original corrected function")
 plt.plot(x,interpol_C(x),"r--",label="corrected interpolation")
 plt.show()
-plt.close()
+plt.close() 
 
 TP1[0]
 
@@ -203,13 +203,13 @@ TP1[0]
 #-------------------Dissipation potential--------------------------------
 
 
-def disip_potential(n):
+def disip_potential(n,inter):
     
-    return potential(n)+ interpol(T1,n)
+    return potential(n)+ inter(n)
 
-def disip_potential_C(n):
+def disip_potential_C(n,inter_C):
     
-    return potential_schro(n) + interpol_C(T1_C,n)
+    return potential_schro(n) + inter_C(n)
 
 #---------------- Dissipative potential--------------------------
 
