@@ -75,7 +75,7 @@ def C4(EV,Vo,beta):
     return np.exp(mu*beta)
 
 
-#Definiendo la funcion a integrar
+#Definiendo la funcion a integrar------------------------------------------
 
 def func(x,EV,beta):
 
@@ -84,7 +84,7 @@ def func(x,EV,beta):
 
     return C1()*f1*f2
 
-#Definiendo funcion del gap
+#Definiendo funcion del gap------------------------------------------------
 
 def Gap(T):
 
@@ -96,7 +96,19 @@ def DeT(T):
         return 3.07*kb*Tc*np.sqrt(1-T/Tc)
     if(T<0.6*Tc):
         return Do*(1-(2*np.pi*kb*T*np.exp(-Do/(kb*T)))/Do)
+#Definiendo funcion densidad de particulas----------------------------------
 
+def Ns(T):
+    
+    mc2=2*0.51E6 #eV
+    lam=47.0E-3 #nm
+    TD=276.0 #k
+    N0=19.87 # 1/eV
+    g=1/(N0*np.log(1.13*TD/9.25))    #eV
+    e=1.0#*1.6E-19
+
+    ns=(mc2/(8*e*np.pi*pow(lam,2)))*(1-pow(T,4)*np.exp(4.0/(g*N0))/pow(1.13*TD,4))
+    return ns
 
 
 J1=np.zeros(len(V))
@@ -125,7 +137,7 @@ for j in range(len(T)):
     
     DeltaT=DeT(T[j])#3.07*kb*Tc*np.sqrt(1-T[j]/Tc)
     
-    N=DeltaT/(2.0*g) #+0.5#
+    N=Ns(T[j]) #+0.5#
     print("N=",N)
     
     for i in range(len(EV)):
@@ -146,7 +158,7 @@ for j in range(len(T)):
 
 plt.xlabel("$ V [Volts]  $",size=15)
 plt.ylabel("$ I [Amp]$ (approx) ",size=15)
-plt.title("$I-V\ curve$ ",size=15)
+plt.title("$ \mathrm{Low\ temperatures}\ $ ",size=15)
 plt.legend(loc=2)
 
 plt.savefig("IV_approx_DT_lowT.png")
@@ -170,7 +182,7 @@ for j in range(len(T)):
     
     DeltaT=3.07*kb*Tc*np.sqrt(1-T[j]/Tc)
     
-    N=DeltaT/(2*g) #+0.5#
+    N=Ns(T[j]) #+0.5#
     print("N=",N)
     
     for i in range(len(EV)):
@@ -190,7 +202,7 @@ for j in range(len(T)):
 
 plt.xlabel("$ V [Volts]  $",size=15)
 plt.ylabel("$ I [Amp]$ (approx) ",size=15)
-plt.title("$I-V\ curve$ ",size=15)
+plt.title("$ \mathrm{High\ temperatures}\ $ ",size=15)
 plt.legend(loc=2)
 
 plt.savefig("IV_approx_DT_highT.png")
