@@ -20,14 +20,14 @@ print C
 
 def multiply_matrix(A,B):
     
-    MATRIX=np.zeros([len(A),len(B[0])])
+    MATRIX=np.zeros([len(A),len(B[0])],dtype="complex")
     
     for i in range(len(A)):
         for j in range(len(B[0])):
             cij=0
             for k in range(len(A)):
                 cij+=A[i][k]*B[k][j]
-            C[i][j]=cij
+            MATRIX[i][j]=cij
     return MATRIX
 
 def sum_matrix(A,B):
@@ -42,4 +42,4 @@ def sum_matrix(A,B):
 
 #print multiply_matrix(A,B)
 #print sum_matrix(A,B)
-print multiply_matrix(A,C)
+#print multiply_matrix(A,C)
