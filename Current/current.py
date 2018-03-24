@@ -107,7 +107,7 @@ def Ns(T):
     g=1/(N0*np.log(1.13*TD/9.25))    #eV
     e=1.0#*1.6E-19
 
-    ns=(mc2/(8*e*np.pi*pow(lam,2)))*(1-pow(T,4)*np.exp(4.0/(g*N0))/pow(1.13*TD,4))
+    ns=(mc2/(8.0*e*np.pi*pow(lam,2)))*(1-pow(T,4)*np.exp(4.0/(g*N0))/pow(1.13*TD,4))
     return ns
 
 
