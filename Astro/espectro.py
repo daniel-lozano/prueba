@@ -43,24 +43,21 @@ for n in range(3): #movimiento de n
         for l in range(3):  #   moviemiento de l
             
             p0=delta(n,n+dn,l,l+0,mole)#
+            p1=delta(n,n+dn,l,l+1,mole)#
+            p2=delta(n,n+dn,l,l+2,mole)#
+            
             if(p0!=0):
                 n_plots+=1
                 P0=ones*p0
                 ax.plot(P0,line)
             
-            p1=delta(n,n+dn,l,l+1,mole)#
-            
-            if(p1!=0):
-                n_plots+=1
-                P1=ones*p0
-                ax.plot(P1,line)
-            
-            p2=delta(n,n+dn,l,l+2,mole)#
+            n_plots+=1
+            P1=ones*p0
+            ax.plot(P1,line)
 
-            if(p2!=0):
-                n_plots+=1
-                P2=ones*p0
-                ax.plot(P2,line)
+            n_plots+=1
+            P2=ones*p0
+            ax.plot(P2,line)
 
 
 print "number of plots=",n_plots
