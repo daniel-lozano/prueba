@@ -7,8 +7,6 @@ name=argv[1]
 F=open(name,"r")
 text=F.readlines()
 DATOS=[]
-alfabeto=[]
-frec_alf=[]
 
 #-----------------------------Leyendo el texto------------------------------
 
@@ -16,20 +14,38 @@ for i in range(len(text)):
     for j in range(len(text[i])):
             DATOS.append(text[i][j])
 F.close()
-#-----------------------------Generando un diccionario y alfabeto------------------------------
+#-----------------------------Generando un diccionario y alfabetos de codigo plano------------------------------
+alfabeto=[]
+frec_alf=[]
+binario=[]
 
 dictionary=Counter(DATOS)
-
-print("longitud del alfabeto",len(dictionary.most_common()))
-
-
-array=dictionary.most_common()#arreglo que contiene el diccionario del texto
+array=dictionary.most_common() #arreglo que contiene el diccionario del texto
 numbers=np.zeros(len(array))
+
+CODIGO=open("codigo_plano_"+name,"w")
+
 for i in range(len(array)):
+    #Encontrando el alfabeto del texto
     alfabeto.append(array[i][0])
+    
+    #Hallando las frecuencias de cada caracter
     frec_alf.append(array[i][1]*1.0/len(array))
+    
+    #Asignando valores para el histograma
     numbers[i]=i
-print
+    
+    #Creando un alfabeto binario
+    caracter=""
+    for j in range(i):
+        caracter+="0"
+    caracter+="1"
+    binario.append(caracter)
+    CODIGO.write(alfabeto[-1]+" "+caracter+"\n ")
+
+CODIGO.close()
+
+
 #---------------------------Generando histograma--------------------------
 datos_hist=np.ones(len(DATOS))
 
@@ -44,19 +60,7 @@ for i in range(len(DATOS)):
 plt.hist(datos_hist,bins=len(array))
 plt.xticks(numbers,alfabeto)
 plt.show()
-#----------------------Creando alfabeto binario---------------------------
 
-binario=[]
-
-for i in range(len(dictionary.most_common())):
-    caracter=""
-    for j in range(i):
-        caracter+="0"
-    caracter+="1"
-   
-    binario.append(caracter)
-print alfabeto,len(alfabeto)
-print binario,len(binario)
 
 #----------------------Escribiendo texto codificador---------------------------
 
@@ -68,6 +72,6 @@ for i in range(len(DATOS)):
 FILE.close()
 
 
-
+#---------------------Decodificando el texto------------------------------------
 
 
