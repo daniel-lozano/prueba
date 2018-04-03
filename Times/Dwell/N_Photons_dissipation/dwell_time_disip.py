@@ -131,7 +131,7 @@ def find(func,x):
 '''
 
 #f=np.linspace(0.1,0.8,15)
-f=np.linspace(0.04,0.11,15)
+f=np.linspace(0.04,0.11,10)
 x=np.linspace(0.1,20)
 
 Turning_C=[]#Turning points of corrected function
@@ -223,36 +223,25 @@ for j in range(4):
         F=f[i]
         DE[i]=DE_func(Turning_C[i][1],Turning_C[i][2])
         TE[i]=I(F)/4.0
-'''
-    plt.plot(f,DE,label="$ \gamma= $"+str(gamma))
-
-plt.plot(f,TE,"k--",label="$ I(F)/4 $")
-
-plt.title("$ \mathrm{Dissipation\ in }\ \eta  $")
-plt.xlabel("$ F\  \mathrm{(a.u.)} $")
-plt.ylabel("$ \Delta E\  \mathrm{(a.u.)} $")
-plt.text(f[2],TE[0]+0.001,"$ Maximum\ Energy\ Dissipated\ $", fontsize=14 )
-plt.legend()
-plt.savefig("Energy_lost.png")
-plt.show()
-plt.close()
-'''
 
 #Finding turning points with dissipation------------------------------
 
 Turning_C=[]#Turning points of corrected function
 Turning=[]#Turning points of uncorrected function
+cutoff=0.5
+gamma=0.0005
+
 print "gamma=",gamma
 for i in range(len(f)):
     F=f[i]
     
     N=int(DE[i]/(hbar*omega))
     
-    if(DE[i]/(hbar*omega)> N+0.5):
+    if(DE[i]/(hbar*omega)> N+cutoff):
         N+=1
     
     
-    D=N*hbar*omega#DE[i]
+    D=DE[i]#N*hbar*omega#
     
     print "F=",F, "N=", N, DE[i]/(hbar*omega) #campo y numero de fotones absorvidos
     
@@ -291,10 +280,10 @@ for i in range(len(f)):
     
     N=int(DE[i]/(hbar*omega))
     
-    if(DE[i]/(hbar*omega)> N+0.7):
+    if(DE[i]/(hbar*omega)> N+cutoff):
         N+=1
     
-    D=N*hbar*omega#DE[i]
+    D=DE[i]#N*hbar*omega#DE[i]
     
 
     T1=Turning[i][1]
@@ -327,15 +316,15 @@ for i in range(len(f)):
 
 
 
-plt.plot(f,Time_ave,"k.",label="uncorrected")
-plt.plot(f,Time_ave_C,"r.",label="corrected")
+plt.plot(f,Time_ave,"k-",label="uncorrected")
+plt.plot(f,Time_ave_C,"r-",label="corrected")
 plt.ylabel("Time [as]")
 plt.xlabel("Field (a.u)")
-plt.title("Average dwell time")
+plt.title("Average dwell time, $ \gamma= $"+str(gamma))
 plt.legend()
-plt.savefig("average_disip.png")
-plt.show()
-plt.close()
+plt.savefig("gamma="+str(gamma)+"_average_disip.png")
+#plt.show()
+#plt.close()
 
 '''#
 
