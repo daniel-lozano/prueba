@@ -8,4 +8,4 @@ for i in range(1,a+1):
     fac*=i
 
 print(argv[-1]+"!="+str(fac))
-FILE.write(argv[-1]+"!="+str(fac)+"\n")
+FILE.write(argv[-1]+","+str(fac)+"\n")
