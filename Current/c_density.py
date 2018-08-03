@@ -18,7 +18,7 @@ hs=6.5E-16 # eV s
 kb=8.6E-5# eV/Kelvin/e
 
 Tc=9.25 #Kelvin
-T=np.linspace(1,9,4)#9.2#4 Kelvin
+T=np.linspace(1,9,10)#9.2#4 Kelvin
 t=T/Tc #Temperatura adimensional
 
 g=(1.0/(92*2000))**2#(m/M)**2
@@ -34,20 +34,20 @@ print("g=",g,"Coupling constant")
 
 A=4*np.pi*np.sqrt(4*m)*dx/h #constante definida
 
-area=346*375 #microns squared
+area=1.0#346*375 #microns squared
 
 conver=1E8#angstroms to microns 
 
 
-EV=np.linspace(0,0.5,300)#/(2*Do)#(-50E15,10E15,1000)*2*e#applied potential in eV
+EV=np.linspace(-0,0.5,300)#/(2*Do)#(-50E15,10E15,1000)*2*e#applied potential in eV
 print(EV)
 V=EV/(2*e) #Applied potential in V
 
 
 
     
-eta=kb*T[0]*np.log(3) #groundstate taken at 1/2 of Bose-Einsteins distribution
-mu=eta#chemical potential, no particles are added
+eta=0.0#kb*T[0]*np.log(3) #groundstate taken at 1/2 of Bose-Einsteins distribution
+mu=0.0#chemical potential, no particles are added
 
 
 
@@ -157,12 +157,17 @@ for j in range(len(T)):
     v=np.linspace(min(J2),max(J2),len(EV))
     plt.plot(u,v,"k--",linewidth=0.5)
 
+caption="$ mu=k_b T ln(3)  $"
+if(mu==0):
+    caption="mu=0"
+    
 plt.xlabel("$ V/2\Delta_0  $",size=15)
-plt.ylabel("$ I [Amp]$ (approx) ",size=15)
-plt.title("$ \mathrm{Low\ temperatures}\ $ ",size=15)
+plt.ylabel("$ J $ (approx) ",size=15)
+plt.title("$ \mathrm{Low\ t}\ $ " + caption,size=15)
 plt.legend(loc=2)
 
-plt.savefig("IV_approx_DT_lowT.png")
+
+plt.savefig("JV_approx_DT_lowT_mu="+str(round(mu,4))+".png")
 plt.show()
 plt.close()
 
@@ -201,12 +206,18 @@ for j in range(len(T)):
 #v=np.linspace(min(J2),max(J2),len(EV))
 #   plt.plot(u,v,"k--",linewidth=0.5)
 
-plt.xlabel("$ V/2\Delta_0 $",size=15)
-plt.ylabel("$ I [Amp]$ (approx) ",size=15)
-plt.title("$ \mathrm{High\ temperatures}\ $ ",size=15)
+
+caption="$ mu=k_b T ln(3)  $"
+if(mu==0):
+    caption="mu=0"
+    
+plt.xlabel("$ V/2\Delta_0  $",size=15)
+plt.ylabel("$ J $ (approx) ",size=15)
+plt.title("$ \mathrm{High\ t}\ $ " + caption,size=15)
+
 plt.legend(loc=2)
 
-plt.savefig("IV_approx_DT_highT.png")
+plt.savefig("JV_approx_DT_highT_mu="+str(round(mu,4))+".png")
 plt.show()
 plt.close()
 
