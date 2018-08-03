@@ -56,7 +56,7 @@ mu=0.0#chemical potential, no particles are added
 
 def C1(Vo,beta):
     
-    fact1=16.0*np.pi*m*e/(pow(h,3)*pow(beta,2)) #cambio hecho en beta
+    fact1=16.0*np.pi*pow(m,2)*e/(pow(h,3)*pow(beta,2)) #cambio hecho en beta
     
     fact2=np.exp(-A*np.sqrt(Vo))
 
@@ -127,7 +127,7 @@ for j in range(len(T)):
     
     beta=1.0/(kb*T[j])
 
-    eta=kb*T[j]*np.log(3) #groundstate taken at 1/2 of Bose-Einsteins distribution
+    eta=0#kb*T[j]*np.log(3) #groundstate taken at 1/2 of Bose-Einsteins distribution
     mu=eta#chemical potential, no particles are added
     
     u=np.ones(len(EV))*eta

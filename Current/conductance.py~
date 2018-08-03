@@ -56,7 +56,7 @@ mu=0.0#chemical potential, no particles are added
 
 def C1(Vo,beta):
     
-    fact1=16.0*np.pi*pow(m,2)*e/(pow(h,3)*pow(beta,2)) #cambio hecho en beta
+    fact1=16.0*np.pi*m*e/(pow(h,3)*pow(beta,2)) #cambio hecho en beta
     
     fact2=np.exp(-A*np.sqrt(Vo))
 
@@ -127,7 +127,7 @@ for j in range(len(T)):
     
     beta=1.0/(kb*T[j])
 
-    eta=0#kb*T[j]*np.log(3) #groundstate taken at 1/2 of Bose-Einsteins distribution
+    eta=kb*T[j]*np.log(3) #groundstate taken at 1/2 of Bose-Einsteins distribution
     mu=eta#chemical potential, no particles are added
     
     u=np.ones(len(EV))*eta
@@ -149,7 +149,7 @@ for j in range(len(T)):
         #J1[i]=area*resultados[0]
         
     
-        J2[i]=N*area*C1(Vo,beta)*np.exp(beta*(C2(Vo,beta)*eta+mu))*(1-np.exp(-beta*EV[i]*(2*DeT(T[j]))))/(1-C2(Vo,beta))
+        J2[i]=beta*(2*DeT(T[j])))*N*area*C1(Vo,beta)*np.exp(beta*(C2(Vo,beta)*eta+mu))*(np.exp(-beta*EV[i]*(2*DeT(T[j]))))/(1-C2(Vo,beta))
 
     plt.plot(EV,J2,label=l)
 
@@ -162,70 +162,14 @@ if(mu==0):
     caption="mu=0"
     
 plt.xlabel("$ V/2\Delta_0  $",size=15)
-plt.ylabel("$ J $ (approx) ",size=15)
+plt.ylabel("$ \\frac{dJ}{dV} $ (approx) ",size=15)
 plt.title("$ \mathrm{Low\ t}\ $ " + caption,size=15)
 plt.legend(loc=2)
 
 
-plt.savefig("JV_approx_DT_lowT_mu="+str(round(mu,4))+".png")
+plt.savefig("conductance_mu="+str(round(mu,4))+".png")
 plt.show()
 plt.close()
-
-
-T=np.linspace(9,9.249,5)
-t=T/Tc
-for j in range(len(T)):
-    beta=1.0/(kb*T[j])
-    
-    eta=0#kb*T[j]*np.log(3) #groundstate taken at 1/2 of Bose-Einsteins distribution
-    mu=eta#chemical potential, no particles are added
-    
-    u=np.ones(len(EV))*eta
-    
-    l="$ T/T_c="+ str(round(t[j],3))+"$"
-    
-    Vo=Gap(T[j])
-    
-    DeltaT=3.07*kb*Tc*np.sqrt(1-T[j]/Tc)
-    
-    N=Ns(T[j]) #+0.5#
-    print("N=",N)
-    
-    for i in range(len(EV)):
-        #funcion=lambda x: func(x,EV[i])
-        
-        #resultados=integrate.quad(funcion,0,np.infty)
-        
-        #J1[i]=area*resultados[0]
-        
-        J2[i]=N*area*C1(Vo,beta)*np.exp(beta*(C2(Vo,beta)*eta+mu))*(1-np.exp(-beta*EV[i]*(2*DeT(T[j]))))/(1-C2(Vo,beta))
-
-    plt.plot(EV,J2,label=l)
-
-
-#v=np.linspace(min(J2),max(J2),len(EV))
-#   plt.plot(u,v,"k--",linewidth=0.5)
-
-
-caption="$ mu=k_b T ln(3)  $"
-if(mu==0):
-    caption="mu=0"
-    
-plt.xlabel("$ V/2\Delta_0  $",size=15)
-plt.ylabel("$ J $ (approx) ",size=15)
-plt.title("$ \mathrm{High\ t}\ $ " + caption,size=15)
-
-plt.legend(loc=2)
-
-plt.savefig("JV_approx_DT_highT_mu="+str(round(mu,4))+".png")
-plt.show()
-plt.close()
-
-
-
-
-
-
 
 
 '''
