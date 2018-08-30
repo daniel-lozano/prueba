@@ -11,7 +11,7 @@ alphaI=0.28125
 alphaN=1.38
 m=0
 Io=0.904#
-B=0.51/2#0.51/2
+B=0.51/2.0#0.51/2
 
 mu=1.0 #a.u.
 hbar=1.0 #a.u.
@@ -28,7 +28,10 @@ number=0.0#float(argv[1])
 
 
 f=np.linspace(0.04,0.11,7)
+
 angle=np.zeros(len(f))
+anglec=np.zeros(len(f))
+
 
 Factor=24.18884 #time[as]/a.u.
 
@@ -39,9 +42,14 @@ def I(F):
     
     return Io + ((alphaN-alphaI)*F**2)/(2)
 
+def V(r):
+    return -1./r
 
-def V(r,r_0,cte):
-    return -1/r-(1/r)*(1+r/(2*r_0))*np.exp(-r/r_0)*cte
+
+def Vc(r,r_0):
+    return -1./r-(1./r)*(1+r/(2*r_0))*np.exp(-r/r_0)
+
+
 r=np.linspace(B,1E4)
 
 #
@@ -54,11 +62,22 @@ r=np.linspace(B,1E4)
 
 for i in range(len(f)):
 
-    func=lambda r: 2*B*(r**4-(B*r)**2 -(r**4)*V(r,B,0)/I(f[i]) )**(-0.5)#*
-    angle[i]=quad(func,B,np.inf)[0]#-np.pi/2
+    func1=lambda r: 2*B*(r**4-(B*r)**2 -(r**4)*V(r)/I(f[i]))**(-0.5)#*
+    angle[i]=quad(func1,B,np.inf)[0]#-np.pi/2
 
-plt.plot(f,angle,label="$ \\theta_m $")
-plt.title("$ v(r)=\\frac{1}{r}  $")
+    func2=lambda r: 2*B*(r**4-(B*r)**2 -(r**4)*Vc(r,B)/I(f[i]) )**(-0.5)#*
+    anglec[i]=quad(func2,B,np.inf)[0]#-np.pi/2
+
+plt.figure(figsize=(16,5))
+plt.title("$ \\theta_{offset} $")
+plt.subplot(131)
+plt.plot(f,angle,label="$ -\\frac{1}{r}$")
+plt.legend()
+plt.subplot(132)
+plt.plot(f,anglec,label="$ -\\frac{1}{r}\ +\ \mathrm{terms} $")
+plt.legend()
+plt.subplot(133)
+plt.plot(f,(angle-anglec),label="$ \mathrm{dif} $")#*180/np.pi
 plt.legend()
 plt.savefig("angle.png")
 plt.show()
