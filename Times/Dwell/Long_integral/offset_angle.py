@@ -40,7 +40,7 @@ Factor=24.18884 #time[as]/a.u.
 
 def I(F):
     
-    return Io + ((alphaN-alphaI)*F**2)/(2)
+    return Io + ((alphaN-alphaI)*F**2)/(2.)
 
 def V(r):
     return -1./r
@@ -52,21 +52,27 @@ def Vc(r,r_0):
 
 r=np.linspace(B,1E4)
 
-#
+
 #R=np.linspace(0.01,B)
 #for i in range(len(f)-1):
-#    func_r=2*B*(pow(R,4)-pow(B*R,2) -pow(R,4)*V(R,B)/I(f[i]) )**(-0.5)
+#    func_r=2*B*(pow(R,4)-pow(B*R,2) -pow(R,4)*V(R)/I(f[i]) )**(-0.5)
 #    plt.plot(R,func_r,label="$ F =$"+str(f[i]))
 #plt.legend()
 #plt.show()
 
 for i in range(len(f)):
 
-    func1=lambda r: 2*B*(r**4-(B*r)**2 -(r**4)*V(r)/I(f[i]))**(-0.5)#*
+    func1=lambda r: 1./np.sqrt(2*r**4*abs(I(f[i])-V(r)-0.5/r**2))
+    
     angle[i]=quad(func1,B,np.inf)[0]#-np.pi/2
 
-    func2=lambda r: 2*B*(r**4-(B*r)**2 -(r**4)*Vc(r,B)/I(f[i]) )**(-0.5)#*
+    func2=lambda r: (1./r**2)/np.sqrt(2*abs(I(f[i])-Vc(r,B)-0.5/r**2))
     anglec[i]=quad(func2,B,np.inf)[0]#-np.pi/2
+
+
+#2*B*(r**4-(B*r)**2 -(r**4)*V(r)/I(f[i]))**(-0.5)#*
+#2*B*(r**4-(B*r)**2 -(r**4)*Vc(r,B)/I(f[i]) )**(-0.5)#*
+
 
 plt.figure(figsize=(16,5))
 plt.title("$ \\theta_{offset} $")
@@ -81,6 +87,24 @@ plt.plot(f,(angle-anglec),label="$ \mathrm{dif} $")#*180/np.pi
 plt.legend()
 plt.savefig("angle.png")
 plt.show()
+
+
+#for i in range(len(f)):
+#    r=np.linspace(B,1000)
+#    fr=np.sqrt(abs(2*(I(f[i])-Vc(r,B)-0.5/r**2)))
+#    plt.plot(r,fr)
+#    if(fr.any()<0):
+#        print("hay algo negativo")
+#plt.grid()
+#plt.show()
+#
+
+angle=np.arccos(-1/np.sqrt(1+I(f)))#2*np.arccos(1/(2*B*I(f)))
+plt.plot(f,angle,label="Rutherford")
+plt.legend()
+plt.show()
+
+
 
 
 
