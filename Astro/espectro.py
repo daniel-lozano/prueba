@@ -52,17 +52,17 @@ for n in range(3): #movimiento de n
                 ax.plot(P0,line)
             
             n_plots+=1
-            P1=ones*p0
+            P1=ones*p1
             ax.plot(P1,line)
 
             n_plots+=1
-            P2=ones*p0
+            P2=ones*p2
             ax.plot(P2,line)
 
 
 print "number of plots=",n_plots
 
-plt.xlim(2000,7000)
+#plt.xlim(2000,7000)
 plt.title("$ "+Labels[mole]+" $",size=20)
 plt.xlabel("$  \mu m $", size=15)
 plt.yticks([])
