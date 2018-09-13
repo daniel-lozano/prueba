@@ -56,7 +56,7 @@ mu=0.0#chemical potential, no particles are added
 
 def C1(Vo,beta):
     
-    fact1=16.0*np.pi*pow(m,2)*e/(pow(h,3)*pow(beta,2)) #cambio hecho en beta
+    fact1=8.0*np.pi*pow(m,2)*e/(pow(h,3)*pow(beta,2)) #cambio hecho en beta
     
     fact2=np.exp(-A*np.sqrt(Vo))
 
