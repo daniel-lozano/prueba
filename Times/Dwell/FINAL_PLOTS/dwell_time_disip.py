@@ -321,8 +321,8 @@ plt.show()
 plt.close()
 #'''
 
-plt.plot(f,Time,"k",label="uncorrected")
-plt.plot(f,Time_C,"k--",label="corrected")
+plt.semilogy(f,Time,"k",label="uncorrected")
+plt.semilogy(f,Time_C,"k--",label="corrected")
 plt.ylabel("Time [as]")
 plt.xlabel("Field (a.u)")
 plt.title("Transmission dwell time")
