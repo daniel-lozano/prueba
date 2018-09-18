@@ -22,7 +22,7 @@ lam=735.0/0.0529
 
 Z=2
 omega=h*c/lam#
-number=float(argv[1])
+number=0
 print("omega=",omega)
 
 Factor=24.18884 #time[as]/a.u.
@@ -212,13 +212,13 @@ for i in range(len(f)):
 
 
 
-plt.semilogy(f,Time,"k",label="uncorrected")
-plt.semilogy(f,Time_C,"k--",label="corrected")
+plt.plot(f,Time,"k",label="uncorrected")
+plt.plot(f,Time_C,"k--",label="corrected")
 plt.ylabel("Time [as]")
 plt.xlabel("Field (a.u)")
 plt.title("Dwell time")
 plt.legend()
-plt.savefig("dwell_time_N="+str(argv[1])+".png")
+plt.savefig("dwell_time.png")
 plt.show()
 plt.close()
 

@@ -242,17 +242,23 @@ plt.close()
 
 Turning_C=[]#Turning points of corrected function
 Turning=[]#Turning points of uncorrected function
+print("Gamma>0 gain energy")
+gamma=float(input("Gamma (0.001) ="))
 
 for i in range(len(f)):
     F=f[i]
     D=DE[i]
     
-    RETURN1=find(potential_schro(x),x)#2
-    RETURN2=find(potential(x),x)#2
-    
+    RETURN1=find(disip_potential_C(x),x)#2
+    RETURN2=find(disip_potential(x),x)#2
+    """
     Turning_C.append([F,brentq(potential_schro,0.1,RETURN1),brentq(potential_schro,RETURN1,100)])
     
     Turning.append([F,brentq(potential,0.1,RETURN2),brentq(potential,RETURN2,100)])
+    """	
+    Turning_C.append([F,brentq(disip_potential_C,0.1,RETURN1),brentq(disip_potential_C,RETURN1,100)])
+    
+    Turning.append([F,brentq(disip_potential,0.1,RETURN2),brentq(disip_potential,RETURN2,100)])
     
     #posibles errores grandes
     
@@ -314,9 +320,9 @@ plt.plot(f,Time_ave,"k",label="uncorrected")
 plt.plot(f,Time_ave_C,"k--",label="corrected")
 plt.ylabel("Time [as]")
 plt.xlabel("Field (a.u)")
-plt.title("Average dwell time")
+plt.title("Average dwell time $\\gamma=$"+str(gamma))
 plt.legend()
-plt.savefig("average_disip.png")
+plt.savefig("average_disip_gamma="+str(gamma)+".png")
 plt.show()
 plt.close()
 #'''
@@ -327,7 +333,7 @@ plt.ylabel("Time [as]")
 plt.xlabel("Field (a.u)")
 plt.title("Transmission dwell time")
 plt.legend()
-plt.savefig("transmission_disip.png")
+#plt.savefig("transmission_disip.png")
 plt.show()
 plt.close()
 
