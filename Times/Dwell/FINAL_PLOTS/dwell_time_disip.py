@@ -215,11 +215,13 @@ TE=np.zeros(len(f))
 #----------Total Dissipative Energy---------------------------------
 
 #gamma=1E-2#E-1#4.5E-1
-for j in range(4):
+G=np.array(range(1,13,2))*-0.001
+print("G=",G)
+for j in range(len(G)):
     
     for i in range(len(f)):
         
-        gamma=(j+1.0)*3.0E-3
+        gamma=G[j]
         F=f[i]
         DE[i]=DE_func(Turning_C[i][1],Turning_C[i][2])
         TE[i]=I(F)/4.0
@@ -243,8 +245,8 @@ plt.close()
 Turning_C=[]#Turning points of corrected function
 Turning=[]#Turning points of uncorrected function
 print("Gamma>0 gain energy")
-gamma=float(input("Gamma (0.001) ="))
-
+#gamma=float(input("Gamma (0.001) ="))
+gamma=G[-1]
 for i in range(len(f)):
     F=f[i]
     D=DE[i]
