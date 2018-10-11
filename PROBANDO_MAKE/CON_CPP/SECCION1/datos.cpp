@@ -15,7 +15,7 @@ int main(){
 	cin >> N;
 	srand(time(0));
 	//Aqui debe imprimir en el archivo los datos random
-	for(i=0; i<N;i++){
+	for(i=0; i<N;i++){ 
 	File << i << " " << rand()%10<< endl;	
 	}
 	//Aqui debe cerrar el archivo
