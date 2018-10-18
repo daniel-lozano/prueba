@@ -34,7 +34,7 @@ D=0 #Dissipation
 
 def I(F):
     
-    return Io + ((alphaN-alphaI)*F**2)/(2)
+    return Io + ((alphaN-alphaI)*F**2)/2.
 
 def I_mod(F):
     
@@ -95,6 +95,10 @@ def DE_func(T1,T2):
     func= lambda n: gamma*kappa(n)*hbar/mu
     return quad(func,T1,T2)[0]
 
+def DE_func_C(T1,T2):
+    
+    func= lambda n: gamma*kappa_C(n)*hbar/mu
+    return quad(func,T1,T2)[0]
 
 
 #-------------------Dissipation--------------------------------
@@ -210,12 +214,13 @@ Time_ave_C=[]
 W=[]
 W_C=[]
 DE=np.zeros(len(f))
+DE_C=np.zeros(len(f))
 TE=np.zeros(len(f))
 
 #----------Total Dissipative Energy---------------------------------
 
 #gamma=1E-2#E-1#4.5E-1
-G=np.array(range(1,13,2))*-0.001
+G=np.array(range(1,13,2))*0.001
 print("G=",G)
 for j in range(len(G)):
     
@@ -223,7 +228,8 @@ for j in range(len(G)):
         
         gamma=G[j]
         F=f[i]
-        DE[i]=DE_func(Turning_C[i][1],Turning_C[i][2])
+        DE[i]=DE_func(Turning[i][1],Turning[i][2])
+        DE_C[i]=DE_func_C(Turning_C[i][1],Turning_C[i][2])
         TE[i]=I(F)/4.0
 
     plt.plot(f,DE,label="$ \gamma= $"+str(gamma))
@@ -247,19 +253,24 @@ Turning=[]#Turning points of uncorrected function
 print("Gamma>0 gain energy")
 #gamma=float(input("Gamma (0.001) ="))
 gamma=G[-1]
+print("Gamma=",gamma)
+print("DE",DE)
+print("DE_C",DE_C)
+
 for i in range(len(f)):
+    
     F=f[i]
-    D=DE[i]
     
+    #Doing the calculus for the corrected function with dissipation
+    D=DE_C[i]
     RETURN1=find(disip_potential_C(x),x)#2
-    RETURN2=find(disip_potential(x),x)#2
-    """
-    Turning_C.append([F,brentq(potential_schro,0.1,RETURN1),brentq(potential_schro,RETURN1,100)])
     
-    Turning.append([F,brentq(potential,0.1,RETURN2),brentq(potential,RETURN2,100)])
-    """	
     Turning_C.append([F,brentq(disip_potential_C,0.1,RETURN1),brentq(disip_potential_C,RETURN1,100)])
     
+    #Doing the calculus for the uncorrected function with dissipation
+    
+    D=DE[i]
+    RETURN2=find(disip_potential(x),x)#2
     Turning.append([F,brentq(disip_potential,0.1,RETURN2),brentq(disip_potential,RETURN2,100)])
     
     #posibles errores grandes
@@ -286,7 +297,7 @@ for i in range(len(f)):
 for i in range(len(f)):
     
     F=f[i]
-    D=DE[i]
+    
     
     T1=Turning[i][1]
     T2=Turning[i][2]
@@ -296,22 +307,20 @@ for i in range(len(f)):
     T2_C=Turning_C[i][2]
     W_C.append((T2_C-T1_C)/1.0)
     
-    #print(T1,T2)
-    
+    D=DE[i]
     func=lambda x: (1/disip_kappa(x))*inte_num(x)
-    func_C=lambda x: (1/disip_kappa_C(x))*inte_num_C(x)
-    
-    
     exponencial=inte_exp(T1,T2)
-    exponencial_C=inte_exp_C(T1_C,T2_C)
-    #print(F,exponencial,exponencial_C)
-    
     Time_ave.append(Factor*quad(func,T1,T2)[0])
-    Time_ave_C.append(Factor*quad(func_C,T1_C,T2_C)[0])
     Time.append(Factor*quad(func,T1,T2)[0]/exponencial)
+    
+    
+    D=DE_C[i]
+    func_C=lambda x: (1/disip_kappa_C(x))*inte_num_C(x)
+    exponencial_C=inte_exp_C(T1_C,T2_C)
+    Time_ave_C.append(Factor*quad(func_C,T1_C,T2_C)[0])
     Time_C.append(Factor*quad(func_C,T1_C,T2_C)[0]/exponencial_C)
     
-    if(i%1==0):
+    if(1):
         print(i)
 
 
