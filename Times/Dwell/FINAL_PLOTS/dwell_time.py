@@ -168,8 +168,10 @@ def inte_exp_C(T1_C,T2_C):
 
 
 
-Time=[]
-Time_C=[]
+Time1=[]
+Time_C1=[]
+Time2=[]
+Time_C2=[]
 W=[]
 W_C=[]
 
@@ -200,23 +202,38 @@ for i in range(len(f)):
     
     exponencial=1#inte_exp(T1,T2)
     exponencial_C=1#inte_exp_C(T1_C,T2_C)
-    print(F,exponencial,exponencial_C)
     
-    Time.append(Factor*quad(func,T1,T2)[0]/exponencial)
-    Time_C.append(Factor*quad(func_C,T1_C,T2_C)[0]/exponencial_C)
+    Time2.append(Factor*quad(func,T1,T2)[0]/exponencial)
+    Time_C2.append(Factor*quad(func_C,T1_C,T2_C)[0]/exponencial_C)
+    
+    #turning points
+    T1=0
+    T2=Turning[i][1]
+    T1_C=0
+    T2_C=Turning_C[i][1]
+    exponencial=1#inte_exp(T1,T2)
+    exponencial_C=1#inte_exp_C(T1_C,T2_C)
+    
+    Time1.append(Factor*quad(func,T1,T2)[0]/exponencial)
+    Time_C1.append(Factor*quad(func_C,T1_C,T2_C)[0]/exponencial_C)
     
     if(i%2==0):
         print(i)
-        print("dif",abs(Time[-1]-Time_C[-1]))
+#print("dif",abs(Time2[-1]-Time_C2[-1]))
 
 
 
-
-plt.plot(f,Time,"k",label="uncorrected")
-plt.plot(f,Time_C,"k--",label="corrected")
+plt.subplot(211)
+plt.plot(f,Time1,"b",label="uncorrected Region 1")
+plt.plot(f,Time_C1,"b--",label="corrected Region 1")
+plt.ylabel("Time [as]")
+plt.title("Dwell time ")
+plt.legend()
+plt.subplot(212)
+plt.plot(f,Time2,"k",label="uncorrected Region 2")
+plt.plot(f,Time_C2,"k--",label="corrected Region 2")
 plt.ylabel("Time [as]")
 plt.xlabel("Field (a.u)")
-plt.title("Dwell time")
 plt.legend()
 plt.savefig("dwell_time.png")
 plt.show()
@@ -228,8 +245,10 @@ TRAVERSAL TIME___________________________________________________________
 '''
 
 
-T=[]
-T_C=[]
+T_1=[]
+T_C1=[]
+T_2=[]
+T_C2=[]
 
 
 for i in range(len(f)):
@@ -247,29 +266,8 @@ for i in range(len(f)):
     func=lambda x: (1/kappa(x))
     func_C=lambda x: (1/kappa_C(x))
     
-    T.append(2*Factor*quad(func,T1,T2)[0])
-    T_C.append(2*Factor*quad(func_C,T1_C,T2_C)[0])
-
-
-
-plt.plot(f,Time,"k",label="Region 2: uncorrected")
-plt.plot(f,Time_C,"k--",label="Region 2: corrected")
-plt.plot(f,T,"r",label="Region 1: uncorrected")
-plt.plot(f,T_C,"r--",label="Region 1: corrected")
-plt.ylabel("Time [as]")
-plt.xlabel("Field (a.u)")
-plt.title("Traversal time and dwell time")
-plt.legend()
-#plt.savefig("traversal_time.png")
-plt.show()
-plt.close()
-
-
-
-
-T=[]
-T_C=[]
-
+    T_1.append(Factor*quad(func,T1,T2)[0])
+    T_C1.append(Factor*quad(func_C,T1_C,T2_C)[0])
 
 for i in range(len(f)):
     
@@ -283,48 +281,54 @@ for i in range(len(f)):
     
     #print(T1,T2)
     
-    func=lambda x: (1/kappa(x))
-    func_C=lambda x: (1/kappa_C(x))
+    func=lambda x: (1./kappa(x))
+    func_C=lambda x: (1./kappa_C(x))
     
-    T.append(Factor*quad(func,T1,T2)[0])
-    T_C.append(Factor*quad(func_C,T1_C,T2_C)[0])
+    T_2.append(Factor*quad(func,T1,T2)[0])
+    T_C2.append(Factor*quad(func_C,T2,T2_C)[0])
+#    T.append(Factor*quad(func,T1,T2)[0])
+#    T_C.append(Factor*quad(func_C,T1_C,T2_C)[0])
 
-
-
-plt.plot(f,T,"r",label="Region 2: uncorrected")
-plt.plot(f,T_C,"r--",label="Region 2: corrected")
+plt.subplot(211)
+plt.plot(f,T_1,"r",label="Region 1: uncorrected")
+plt.plot(f,T_C1,"r--",label="Region 1: corrected")
 plt.ylabel("Time [as]")
-plt.xlabel("Field (a.u)")
 plt.title("Traversal time")
 plt.legend()
-#plt.savefig("traversal_time.png")
-plt.show()
-plt.close()
-
-
-
-
-W_alex=[8.73,10.19,11.96,13.55,15.76,17.22,19.08,20.85]
-T_alex=[34.30,39.83,46.29,51.85,60.15,65.68,73.04,79.50]
-
-plt.plot(W,f,label="Width with uncorrected")
-plt.plot(W_C,f,label="Width with corrected")
-plt.xlabel("Barrier width")
-plt.ylabel("Field")
+plt.subplot(212)
+plt.plot(f,T_2,"r",label="Region 2: uncorrected")
+plt.plot(f,T_C2,"r--",label="Region 2: corrected")
+plt.ylabel("Time [as]")
+plt.xlabel("Field (a.u)")
 plt.legend()
+plt.savefig("traversal_time.png")
 plt.show()
 plt.close()
 
 
 
-plt.plot(W,Time,label="Unconrrected")
-plt.plot(W_C,Time_C,label="Corrected")
-plt.plot(W_alex,T_alex,label="Alex")
-plt.xlabel("Barrier width")
-plt.ylabel("Time[as]")
-plt.legend()
-plt.show()
-plt.close()
+#
+#W_alex=[8.73,10.19,11.96,13.55,15.76,17.22,19.08,20.85]
+#T_alex=[34.30,39.83,46.29,51.85,60.15,65.68,73.04,79.50]
+#
+#plt.plot(W,f,label="Width with uncorrected")
+#plt.plot(W_C,f,label="Width with corrected")
+#plt.xlabel("Barrier width")
+#plt.ylabel("Field")
+#plt.legend()
+#plt.show()
+#plt.close()
+#
+#
+#
+#plt.plot(W,Time,label="Unconrrected")
+#plt.plot(W_C,Time_C,label="Corrected")
+#plt.plot(W_alex,T_alex,label="Alex")
+#plt.xlabel("Barrier width")
+#plt.ylabel("Time[as]")
+#plt.legend()
+#plt.show()
+#plt.close()
 
 
 
