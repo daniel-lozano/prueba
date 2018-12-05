@@ -18,7 +18,8 @@ hs=6.5E-16 # eV s
 kb=8.6E-5# eV/Kelvin/e
 
 Tc=9.25 #Kelvin
-T=np.linspace(1,9,7)#9.2#4 Kelvin
+colors=["k--","m--","violet","b--"]
+T=np.linspace(1,9,4)#9.2#4 Kelvin
 t=T/Tc #Temperatura adimensional
 
 g=(1.0/(92*2000))**2#(m/M)**2
@@ -152,7 +153,7 @@ for j in range(len(T)):
         units=1#(2*DeT(T[j]))
         J2[i]=N*area*C1(Vo,beta)*np.exp(beta*(C2(Vo,beta)*eta+mu))*(1-np.exp(-beta*EV[i]*units))/(1-C2(Vo,beta))
 
-    plt.plot(EV,J2,label=l)
+    plt.plot(EV,J2,colors[j],label=l)
 
 #
 #    v=np.linspace(min(J2),max(J2),len(EV))
@@ -162,9 +163,10 @@ caption="$ mu=k_b T ln(3)  $"
 if(mu==0):
     caption="mu=0"
     
-plt.xlabel("$ V  $",size=15)
-plt.ylabel("$ J $ (approx) ",size=15)
-plt.title("$ \mathrm{t}\ $ " + caption,size=15)
+plt.xlabel("$ V\ \mathrm{[eV]}  $",size=15)
+plt.ylabel("$ J\ [\mathrm{A/}\mu] $ (approx) ",size=15)
+plt.title("$ \mathrm{Low\ temperatures}\ $ ",size=15)
+#plt.title("$ \mathrm{t}\ $ " + caption,size=15)
 plt.legend(loc=2)
 
 
@@ -173,6 +175,7 @@ plt.legend(loc=2)
 #plt.close()
 
 plt.subplot(122)
+colors=["c--","g","y","orange","r"]
 T=np.linspace(9,9.249,5)
 t=T/Tc
 for j in range(len(T)):
@@ -201,7 +204,7 @@ for j in range(len(T)):
         units=1#(2*DeT(T[j]))
         J2[i]=N*area*C1(Vo,beta)*np.exp(beta*(C2(Vo,beta)*eta+mu))*(1-np.exp(-beta*EV[i]*units))/(1-C2(Vo,beta))
 
-    plt.plot(EV,J2,label=l)
+    plt.plot(EV,J2,colors[j],label=l)
 
 
 #v=np.linspace(min(J2),max(J2),len(EV))
@@ -212,12 +215,14 @@ caption="$ mu=k_b T ln(3)  $"
 if(mu==0):
     caption="mu=0"
     
-plt.xlabel("$ V  $",size=15)
-plt.ylabel("$ J $ (approx) ",size=15)
-plt.title("$ \mathrm{High\ t}\ $ " + caption,size=15)
+plt.xlabel("$ V\ \mathrm{[eV]}  $",size=15)
+plt.ylabel("$ J\ [\mathrm{A/}\mu] $ (approx) ",size=15)
+plt.title("$ \mathrm{High\ temperatures}\ $ ",size=15)
+#plt.title("$ \mathrm{High\ t}\ $ " + caption,size=15)
 
 plt.legend(loc=2)
 
+plt.savefig("JV_approx_DT_mu="+str(round(mu,4))+".eps")
 plt.savefig("JV_approx_DT_mu="+str(round(mu,4))+".png")
 plt.show()
 plt.close()

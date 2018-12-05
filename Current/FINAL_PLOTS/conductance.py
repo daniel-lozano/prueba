@@ -18,7 +18,9 @@ hs=6.5E-16 # eV s
 kb=8.6E-5# eV/Kelvin/e
 
 Tc=9.25 #Kelvin
-T=np.linspace(1,9,10)#9.2#4 Kelvin
+colors=["k--","m--","violet","b--","c--","g","y","orange","r"]
+T=np.linspace(1,9,len(colors))#9.2#4 Kelvin
+
 t=T/Tc #Temperatura adimensional
 
 g=(1.0/(92*2000))**2#(m/M)**2
@@ -154,8 +156,9 @@ for j in range(len(T)):
     XTOT=list(-EV[-1::-1])
     JTOT.extend(J2)
     XTOT.extend(EV)
+    mark=colors[j]
 
-    plt.plot(XTOT,JTOT,label=l)
+    plt.plot(XTOT,JTOT,mark,label=l)
 
 
 caption="$ mu=k_b T ln(3)  $"
@@ -168,7 +171,7 @@ plt.title("$ \mathrm{Low\ t}\ $ " + caption,size=15)
 plt.legend(loc=1)
 
 
-plt.savefig("conductance_mu="+str(round(mu,4))+".png")
+plt.savefig("conductance_mu_I_"+str(round(mu,4))+".eps")
 plt.show()
 plt.close()
 

@@ -18,6 +18,7 @@ hs=6.5E-16 # eV s
 kb=8.6E-5# eV/Kelvin/e
 
 Tc=9.25 #Kelvin
+colors=["k--","m--","violet","b--"]
 T=np.linspace(1,7,4)#9.2#4 Kelvin
 t=T/Tc #Temperatura adimensional
 
@@ -151,16 +152,16 @@ for j in range(len(T)):
         units=1#(2*DeT(T[j]))
         J2[i]=N*area*C1(Vo,beta)*np.exp(beta*(C2(Vo,beta)*eta+mu))*(1-np.exp(-beta*EV[i]*units))/(1-C2(Vo,beta))
 
-    plt.plot(EV,J2,label=l)
+    plt.plot(EV,J2,colors[j],label=l)
 #    v=np.linspace(min(J2),max(J2),len(EV))
 #    plt.plot(u,v,"k--",linewidth=0.5)
 
-plt.xlabel("$ V  $",size=15)
-plt.ylabel("$ I [Amp]$ (approx) ",size=15)
+plt.xlabel("$ V\ [\mathrm{eV}] $",size=15)
+plt.ylabel("$ I\ [Amp]$ (approx) ",size=15)
 plt.title("$ \mathrm{Low\ temperatures}\ $ ",size=15)
 plt.legend(loc=2)
 
-
+colors=["c--","g","y","orange","r"]
 T=np.linspace(9,9.249,5)
 t=T/Tc
 plt.subplot(122)
@@ -190,17 +191,18 @@ for j in range(len(T)):
         units=1#(2*DeT(T[j]))
         J2[i]=N*area*C1(Vo,beta)*np.exp(beta*(C2(Vo,beta)*eta+mu))*(1-np.exp(-beta*EV[i]*units))/(1-C2(Vo,beta))
 
-    plt.plot(EV,J2,label=l)
+    plt.plot(EV,J2,colors[j],label=l)
 
 
 #v=np.linspace(min(J2),max(J2),len(EV))
 #   plt.plot(u,v,"k--",linewidth=0.5)
 
-plt.xlabel("$ V $",size=15)
-plt.ylabel("$ I [Amp]$ (approx) ",size=15)
+plt.xlabel("$ V\ [\mathrm{eV}] $",size=15)
+plt.ylabel("$ I\ [Amp]$ (approx) ",size=15)
 plt.title("$ \mathrm{High\ temperatures}\ $ ",size=15)
 plt.legend(loc=2)
 
+plt.savefig("IV_approx_DT.eps")
 plt.savefig("IV_approx_DT.png")
 plt.show()
 plt.close()

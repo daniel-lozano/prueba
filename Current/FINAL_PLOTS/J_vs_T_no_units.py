@@ -146,7 +146,7 @@ plt.ylabel("$ J $ (approx) ",size=15)
 plt.title("$I(T/T_c)\ curve$ ",size=15)
 plt.legend(loc=2)
 
-plt.savefig("J_T.png")
+plt.savefig("J_T.eps")
 plt.show()
 plt.close()
 

@@ -146,7 +146,7 @@ plt.ylabel("$ I [Amp]$ (approx) ",size=15)
 plt.title("$I(T/T_c)\ curve$ ",size=15)
 plt.legend(loc=2)
 
-plt.savefig("I_T.png")
+plt.savefig("I_T.eps")
 plt.show()
 plt.close()
 
