@@ -50,6 +50,32 @@ def potential(n):
     
     return -t1 - t2 + t3 + t4  +I_mod(F)/4.0
 
+# Expressions for the triangle potential, the derivative is define for the slope of the triangle in the second turning point. The potential will be define as a general expression and not by parts since the expressions used will be define in the domain which its valid.
+
+def potential_derivative(n):
+    
+    b2=(Z-1)-(1+m)*np.sqrt(I(F)/2)
+    
+    t1= b2/(2*n**2)
+    
+    t2= F/8
+    
+    t3= (m**2-1)/(4*pow(n,3))
+    
+    t4=  (alphaI*F/n**2) *( np.exp(-3/n)*(3-2*n)/n**4  )
+
+    return +t1 - t2 - t3 + t4
+
+# The dependence on the energy is necessary to determine the point to take the slope as well as the turning point, this is taken into account in the original expression as it has the term needed
+
+def potential_triangle(n,n1,n2):
+
+    m=potential_derivative(n2) #Slope of the triangle
+    b=-m*n2 # cut with the axis
+    
+    return m*n+b
+
+
 
 def potential_schro(n):
     
@@ -70,6 +96,35 @@ def potential_schro(n):
     
     return -t1 - t2 + t3 + t4 - t5 +I_mod(F)/4.0
 
+# Expressions for the triangle potential, the derivative is define for the slope of the triangle in the second turning point. The potential will be define as a general expression and not by parts since the expressions used will be define in the domain which its valid.
+
+def potential_derivative_C(n):
+    
+    b2=(Z-1)-(1+m)*np.sqrt(I(F)/2)
+    
+    t1= b2/(2*n**2)
+    
+    t2= F/8
+    
+    t3= (m**2-1)/(4*pow(n,3))
+    
+    t4=  (alphaI*F/n**2) *( np.exp(-3/n)*(3-2*n)/n**4  )
+    
+    t5= -(1/n**2)*np.exp(-n/(2*ro)) - (1/(2*ro))*(1/n +1/(4*ro))*np.exp(-n/(2*ro))
+    
+    return +t1 - t2 - t3 + t4 - t5
+
+# The dependence on the energy is necessary to determine the point to take the slope as well as the turning point, this is taken into account in the original expression as it has the term needed
+
+def potential_triangle_C(n,n1,n2):
+    
+    m=potential_derivative_C(n2) #Slope of the triangle
+    b=-m*n2 # cut with the axis
+    
+    return m*n+b
+
+
+
 def kappa_C(n):
 
     return np.sqrt(2*mu*abs(potential_schro(n)))/hbar
@@ -77,6 +132,16 @@ def kappa_C(n):
 def kappa(n):
     
     return np.sqrt(2*mu*abs(potential(n)))/hbar
+
+def kappa_T(n,n1,n2):
+    
+    return np.sqrt(2*mu*abs(potential_triangle(n,n1,n2)))/hbar
+
+def kappa_T_C(n,n1,n2):
+    
+    return np.sqrt(2*mu*abs(potential_triangle_C(n,n1,n2)))/hbar
+
+
 
 def k():
     return np.sqrt(2*mu*I(F)/4)/hbar
@@ -103,8 +168,6 @@ FILE.write("#F T1C T2C T1 T2 \n")
 
 
 for i in f:
-    
-    
     
     F=i
     
@@ -155,6 +218,20 @@ def inte_exp(T1,T2):
     func=lambda y: kappa(y)
     return np.exp(-2*quad(func,T1,T2)[0])
 
+# Integrals for the triangle potential
+
+def inte_num_T(x,n1,n2):
+    
+    func=lambda y: kappa_T(y,n1,n2)
+    return (np.exp(-2*quad(func,T1,x)[0]))
+
+def inte_exp_T(T1,T2,n1,n2):
+    
+    func=lambda y: kappa_T(y,n1,n2)
+    return np.exp(-2*quad(func,T1,T2)[0])
+
+
+# Integrals for the corrected potential
 
 def inte_num_C(x):
 
@@ -166,12 +243,35 @@ def inte_exp_C(T1_C,T2_C):
     func=lambda y: kappa_C(y)
     return np.exp(-2*quad(func,T1_C,T2_C)[0])
 
+# Integrals for the triangle potential
+
+def inte_num_T_C(x,n1,n2):
+    
+    func=lambda y: kappa_T_C(y,n1,n2)
+    return (np.exp(-2*quad(func,T1,x)[0]))
+
+def inte_exp_T_C(T1,T2,n1,n2):
+    
+    func=lambda y: kappa_T_C(y,n1,n2)
+    return np.exp(-2*quad(func,T1,T2)[0])
+
+
+
+
 
 
 Time1=[]
 Time_C1=[]
+Time_T1=[]
+Time_TC1=[]
+
 Time2=[]
 Time_C2=[]
+Time_T2=[]
+Time_TC2=[]
+
+
+
 W=[]
 W_C=[]
 
@@ -197,20 +297,30 @@ for i in range(len(f)):
     #print(T1,T2)
     
     func=lambda x: (1/kappa(x))*inte_num(x)
+    func_T=lambda x: (1/kappa_T(x,T1,T2))*inte_num_T(x,T1,T2)
     func_C=lambda x: (1/kappa_C(x))*inte_num_C(x)
+    func_T_C=lambda x: (1/kappa_T_C(x,T1,T2))*inte_num_T_C(x,T1_C,T2_C)
+
     
     
     exponencial=1#inte_exp(T1,T2)
+    exponencial_T=1#inte_exp_T(T1,T2)
     exponencial_C=1#inte_exp_C(T1_C,T2_C)
+    exponencial_T_C=1#inte_exp_T_C(T1_C,T2_C)
+
     
     Time2.append(Factor*quad(func,T1,T2)[0]/exponencial)
+    Time_T2.append(Factor*quad(func_T,T1,T2)[0]/exponencial_T)
     Time_C2.append(Factor*quad(func_C,T1_C,T2_C)[0]/exponencial_C)
+    Time_TC2.append(Factor*quad(func_T,T1_C,T2_C)[0]/exponencial_T_C)
+
     
     #turning points
     T1=0
     T2=Turning[i][1]
     T1_C=0
     T2_C=Turning_C[i][1]
+    
     exponencial=1#inte_exp(T1,T2)
     exponencial_C=1#inte_exp_C(T1_C,T2_C)
     
@@ -230,8 +340,11 @@ plt.ylabel("Time [as]")
 plt.title("Dwell time ")
 plt.legend()
 plt.subplot(212)
-plt.plot(f,Time2,"k",label="uncorrected Region 2")
-plt.plot(f,Time_C2,"k--",label="corrected Region 2")
+plt.plot(f,Time2,"k",label="Uncorrected Region 2")
+plt.plot(f,Time_C2,"k--",label="Corrected Region 2")
+plt.plot(f,Time_T2,"r",label="triangle Uncorrected Region 2")
+plt.plot(f,Time_TC2,"r--",label="triangle Corrected Region 2")
+
 plt.ylabel("Time [as]")
 plt.xlabel("Field (a.u)")
 plt.legend()
