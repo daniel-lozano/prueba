@@ -23,7 +23,7 @@ lam=735.0/0.0529
 Z=2
 omega=h*c/lam #
 number=0.0#float(argv[1])
-gamma=float(argv[1])
+gamma=float(input("give a value of gamma= "))#float(argv[1])
 print("gamma_D=",gamma)
 
 
@@ -36,7 +36,7 @@ Factor=24.18884 #time[as]/a.u.
 
 def I(F):
     
-    return Io + ((alphaN-alphaI)*F**2)/(2)
+    return Io + ((alphaN-alphaI)*F**2)/(2.)
 
 
 
@@ -77,7 +77,7 @@ def potential_schro(n):
     return -t1 - t2 + t3 + t4 - t5 +I(F)/4.0
 
 
-#------------------------------------------Wave number withoud dissipation--------------------------------
+#------------------------------------------Wave number without dissipation--------------------------------
 
 
 def kappa_C(n):
@@ -118,8 +118,6 @@ def DE_func_C(T1_C,x,T2_C):
     
     RES_C=np.zeros(len(x))
     
-    
-    
     for i in range(len(x)):
         func= lambda n: gamma*kappa_C(n)*hbar/mu
         
@@ -131,7 +129,6 @@ def DE_func_C(T1_C,x,T2_C):
         
         if( x[i]>T2_C):
             RES_C[i]=quad(func,T1_C,T2_C)[0]
-
 
     return RES_C
 
@@ -277,6 +274,7 @@ plt.close()
 #DWELL TIME___________________________________________________________
 
 
+
 Time=[]
 Time_C=[]
 Time_ave=np.zeros(len(f))
@@ -290,7 +288,7 @@ FILE.write("#F Time Time_C \n")
 for i in range(len(f)):
     
     F=f[i]
-    
+    print("paso f= "+str(F)+", punto  i=  "+str(i)+" de "+str(len(f)))
     T1=Turning[i][1]
     T2=Turning[i][2]
     W.append((T2-T1))
@@ -325,15 +323,15 @@ for i in range(len(f)):
 
 FILE.close()
 
-
+print("Terminando la simulacion")
 
 plt.plot(f,Time_ave,"k",label="uncorrected")
 plt.plot(f,Time_ave_C,"k--",label="corrected")
 plt.ylabel("Time [as]")
 plt.xlabel("Field (a.u)")
-plt.title("Average dwell time")
+plt.title("Average dwell time, $ \\gamma= $"+str(gamma))
 plt.legend()
-plt.savefig("average_disip.png")
+#plt.savefig("average_disip.png")
 #plt.show()
 #plt.close()
 #

@@ -90,7 +90,7 @@ def kappa(n):
 
 def k():
     
-    return np.sqrt(2*mu*I(F)/4)/hbar
+    return np.sqrt(2*mu*I(F)/4.)/hbar
 
 
 #------------------------------------------Energy loss--------------------------------
@@ -156,11 +156,11 @@ def DE_func_num_C(T1_C,x):
 
 def disip_potential(n):
     
-    return potential(n)+ DE_func_num(T1,n)
+    return potential(n)+ DE_func_num(T1,n) #_num
 
 def disip_potential_C(n):
     
-    return potential_schro(n) + DE_func_num_C(T1_C,n)
+    return potential_schro(n) + DE_func_num_C(T1_C,n)#_num
 
 #---------------- Dissipative potential--------------------------
 
@@ -175,9 +175,11 @@ def disip_kappa_C(n):
 
 #-----------------Funcion para encontrar el punto de retorno ------
 def find(func,x):
+    sign=np.sign(func[0])
     for i in range(len(func)):
-        if(func[i]>0):
-            return x[i]
+        
+        if(np.sign(func[i])!=sign):
+            return x[i-1]
 
 
 
@@ -185,7 +187,7 @@ def find(func,x):
 
 #f=np.linspace(0.1,0.8,15)
 
-x=np.linspace(0.1,100)
+
 
 Turning_C=[]#Turning points of corrected function
 Turning=[]#Turning points of uncorrected function
@@ -194,6 +196,7 @@ print("F","T1","T2","T1_C","T2_C")
 
 for i in f:
     F=i
+    x=np.linspace(0.1,1000)
     
     RETURN1_C=find(potential_schro(x),x)#2
     RETURN1=find(potential(x),x)#2
@@ -205,10 +208,21 @@ for i in f:
     #first turning point
     T1=Turning[-1][1]
     T1_C=Turning_C[-1][1]
-
+    
+    print(potential_schro(T1_C))
+    print(potential(T1))
+    
     #finding second turning point
-    Turning[-1][2]=brentq(disip_potential,RETURN1,100)
-    Turning_C[-1][2]=brentq(disip_potential_C,RETURN1_C,100)
+    print("sign")
+    print(disip_potential(RETURN1),disip_potential(2000))
+    print(disip_potential_C(RETURN1_C),disip_potential(2000))
+    
+    x=np.linspace(max(RETURN1,RETURN1_C)+1,1000)
+    RETURN2_C=find(disip_potential_C(x),x)#2
+    RETURN2=find(disip_potential(x),x)#2
+    
+    Turning[-1][2]=brentq(disip_potential,RETURN2,1000)
+    Turning_C[-1][2]=brentq(disip_potential_C,RETURN2_C,1000)
     
     print(F,Turning[-1][1],Turning[-1][2],Turning_C[-1][1],Turning_C[-1][2])
 
@@ -247,9 +261,10 @@ DE=np.zeros(len(f))
 TE=np.zeros(len(f))
 
 #----------Total Dissipative Energy---------------------------------
+
 x_plot=np.linspace(0.1,100,1000)
-'''
-for i in [0,1]:#range(len(f)):
+
+for i in [0,1]:#range(len(f)):'
     
     F=f[i]
     TE=np.ones(len(x_plot))*I(F)/4.0
@@ -266,10 +281,6 @@ plt.legend()
 plt.savefig("Energy_lost.png")
 plt.show()
 plt.close()
-'''
-
-
-
 
 #DWELL TIME___________________________________________________________
 
@@ -300,22 +311,22 @@ for i in range(len(f)):
     #print(T1,T2)
     
     func=lambda x: (1.0/disip_kappa(x))*inte_num(x)
-    #func_C=lambda x: (1/disip_kappa_C(x))*inte_num_C(x)
+    func_C=lambda x: (1/disip_kappa_C(x))*inte_num_C(x)
     
     average_dt=Factor*quad(func,T1,T2)[0]
-    #average_dt_C=Factor*quad(func_C,T1_C,T2_C)[0]
+    average_dt_C=Factor*quad(func_C,T1_C,T2_C)[0]
     
     
     FILE.write(str(F)+" "+str(average_dt)+"\n")
     print(F,average_dt)
     Time_ave[i]=average_dt
-    #Time_ave_C[i]=average_dt_C
+    Time_ave_C[i]=average_dt_C
     
-    #exponencial=inte_exp(T1,T2)
-    #exponencial_C=inte_exp_C(T1_C,T2_C)
-    #Time.append(average_dt/exponencial)
-    #Time_C.append(average_dt_C/exponencial_C)
-    #print(F,exponencial,exponencial_C)
+    exponencial=inte_exp(T1,T2)
+    exponencial_C=inte_exp_C(T1_C,T2_C)
+    Time.append(average_dt/exponencial)
+    Time_C.append(average_dt_C/exponencial_C)
+    print(F,exponencial,exponencial_C)
     
     
     if(i%1==0):
@@ -331,10 +342,10 @@ plt.ylabel("Time [as]")
 plt.xlabel("Field (a.u)")
 plt.title("Average dwell time, $ \\gamma= $"+str(gamma))
 plt.legend()
-#plt.savefig("average_disip.png")
-#plt.show()
-#plt.close()
-#
+plt.savefig("average_disip.png")
+plt.show()
+plt.close()
+
 
 '''
 plt.plot(f,Time,"k",label="uncorrected")

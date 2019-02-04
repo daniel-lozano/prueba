@@ -27,7 +27,7 @@ number=0.0#float(argv[1])
 #print("gamma_D=",gamma)
 
 
-f=np.linspace(0.04,0.11,7)
+f=np.linspace(0.01,0.15,1000)
 
 angle=np.zeros(len(f))
 anglec=np.zeros(len(f))

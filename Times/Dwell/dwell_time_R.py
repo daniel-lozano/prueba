@@ -237,11 +237,11 @@ for i in range(len(f)):
     
     F=f[i]
     
-    T1=0#Turning[i][1]
-    T2=Turning[i][1]#Turning[i][2]
+    T1=Turning[i][1]
+    T2=Turning[i][2]#Turning[i][2]
     
-    T1_C=0#Turning_C[i][1]
-    T2_C=Turning_C[i][1]#Turning_C[i][2]
+    T1_C=Turning_C[i][1]
+    T2_C=Turning_C[i][2]#Turning_C[i][2]
     
     #print(T1,T2)
     
@@ -256,36 +256,36 @@ plt.plot(f,T,"k",label="uncorrected")
 plt.plot(f,T_C,"k--",label="corrected")
 plt.ylabel("Time [as]")
 plt.xlabel("Field (a.u)")
-plt.title("Traversal time (in R)")
+plt.title("Traversal time (in R) Region 2")
 plt.legend()
 plt.savefig("traversal_time_R.png")
 plt.show()
 plt.close()
 
-
-W_alex=[8.73,10.19,11.96,13.55,15.76,17.22,19.08,20.85]
-T_alex=[34.30,39.83,46.29,51.85,60.15,65.68,73.04,79.50]
-
-plt.plot(W,f,label="Width with uncorrected")
-plt.plot(W_C,f,label="Width with corrected")
-plt.xlabel("Barrier width")
-plt.ylabel("Field")
-plt.legend()
-plt.show()
-plt.close()
-
-
-
-plt.plot(W,Time,label="Unconrrected")
-plt.plot(W_C,Time_C,label="Corrected")
-plt.plot(W_alex,T_alex,label="Alex")
-plt.xlabel("Barrier width")
-plt.ylabel("Time[as]")
-plt.legend()
-plt.show()
-plt.close()
-
-#'''
+#
+#W_alex=[8.73,10.19,11.96,13.55,15.76,17.22,19.08,20.85]
+#T_alex=[34.30,39.83,46.29,51.85,60.15,65.68,73.04,79.50]
+#
+#plt.plot(W,f,label="Width with uncorrected")
+#plt.plot(W_C,f,label="Width with corrected")
+#plt.xlabel("Barrier width")
+#plt.ylabel("Field")
+#plt.legend()
+#plt.show()
+#plt.close()
+#
+#
+#
+#plt.plot(W,Time,label="Unconrrected")
+#plt.plot(W_C,Time_C,label="Corrected")
+#plt.plot(W_alex,T_alex,label="Alex")
+#plt.xlabel("Barrier width")
+#plt.ylabel("Time[as]")
+#plt.legend()
+#plt.show()
+#plt.close()
+#
+##'''
 
 
 
