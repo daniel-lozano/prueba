@@ -18,12 +18,9 @@ hs=6.5E-16 # eV s
 kb=8.6E-5# eV/Kelvin/e
 
 Tc=9.25 #Kelvin
-colors=["k--","m--","violet","b--"]
+colors=["k:","m-.","violet","b--"]
 T=np.linspace(1,7,4)#9.2#4 Kelvin
 t=T/Tc #Temperatura adimensional
-
-g=(1.0/(92*2000))**2#(m/M)**2
-
 
 
 print("dx=",dx, "Angstroms")
@@ -47,10 +44,8 @@ V=EV/(2*e) #Applied potential in V
 
 
     
-eta=kb*T[0]*np.log(3) #groundstate taken at 1/2 of Bose-Einsteins distribution
-mu=eta#chemical potential, no particles are added
-
-
+eta=kb*T[0]*np.log(3) #groundstate taken at 1/2 of Bose-Einsteins distribution, it's changed along the program!!!
+mu=eta#chemical potential, no particles are added, it's changed along the program!!!
 
 
 #Definiendo constantes de la integral usada
@@ -143,25 +138,19 @@ for j in range(len(T)):
     print("N=",N)
     
     for i in range(len(EV)):
-        #funcion=lambda x: func(x,EV[i])
-    
-        #resultados=integrate.quad(funcion,0,np.infty)
-    
-        #J1[i]=area*resultados[0]
         
         units=1#(2*DeT(T[j]))
         J2[i]=N*area*C1(Vo,beta)*np.exp(beta*(C2(Vo,beta)*eta+mu))*(1-np.exp(-beta*EV[i]*units))/(1-C2(Vo,beta))
 
     plt.plot(EV,J2,colors[j],label=l)
-#    v=np.linspace(min(J2),max(J2),len(EV))
-#    plt.plot(u,v,"k--",linewidth=0.5)
+
 
 plt.xlabel("$ V\ [\mathrm{eV}] $",size=15)
-plt.ylabel("$ I\ [Amp]$ (approx) ",size=15)
+plt.ylabel("$ I\ [Amp]$  ",size=15)
 plt.title("$ \mathrm{Low\ temperatures}\ $ ",size=15)
 plt.legend(loc=2)
 
-colors=["c--","g","y","orange","r"]
+colors=["c.-","g-.","y--","orange","r:"]
 T=np.linspace(9,9.249,5)
 t=T/Tc
 plt.subplot(122)
@@ -183,22 +172,18 @@ for j in range(len(T)):
     print("N=",N)
     
     for i in range(len(EV)):
-        #funcion=lambda x: func(x,EV[i])
         
-        #resultados=integrate.quad(funcion,0,np.infty)
-        
-        #J1[i]=area*resultados[0]
         units=1#(2*DeT(T[j]))
         J2[i]=N*area*C1(Vo,beta)*np.exp(beta*(C2(Vo,beta)*eta+mu))*(1-np.exp(-beta*EV[i]*units))/(1-C2(Vo,beta))
 
-    plt.plot(EV,J2,colors[j],label=l)
+    if(j==0):
+        plt.plot(EV[0:len(J2):4],J2[0:len(J2):4],colors[j],label=l)
+    else:
+        plt.plot(EV,J2,colors[j],label=l)
 
-
-#v=np.linspace(min(J2),max(J2),len(EV))
-#   plt.plot(u,v,"k--",linewidth=0.5)
 
 plt.xlabel("$ V\ [\mathrm{eV}] $",size=15)
-plt.ylabel("$ I\ [Amp]$ (approx) ",size=15)
+plt.ylabel("$ I\ [Amp]$ ",size=15)
 plt.title("$ \mathrm{High\ temperatures}\ $ ",size=15)
 plt.legend(loc=2)
 
@@ -212,22 +197,6 @@ plt.close()
 
 
 
-
-
-'''
-    print("C1=", C1(a,m,h,beta,Vo,g))
-    print("C2=", C2(a,m,Vo,beta))
-    print("C3[",i,"]=", C3(mu,EV[i]))
-    print("C4[",i,"]", C4(mu,EV[i]))
-
-
-plt.plot(EV,J1)
-plt.xlabel("$ V [Volts]  $")
-plt.ylabel("$ J1 $")
-plt.show()
-plt.close()
-
-'''
 
 
 
