@@ -248,11 +248,12 @@ plt.close()
 
 #Finding turning points with dissipation------------------------------
 
+
 Turning_C=[]#Turning points of corrected function
 Turning=[]#Turning points of uncorrected function
 print("Gamma>0 gain energy")
 #gamma=float(input("Gamma (0.001) ="))
-gamma=G[-1]
+gamma=0#G[-1]
 print("Gamma=",gamma)
 print("DE",DE)
 print("DE_C",DE_C)
@@ -271,7 +272,7 @@ for i in range(len(f)):
     
     D=DE[i]
     RETURN2=find(disip_potential(x),x)#2
-    Turning.append([F,brentq(disip_potential,0.1,RETURN2),brentq(disip_potential,RETURN2,100)])
+    Turning.append([F,brentq(disip_potential,0.01,RETURN2),brentq(disip_potential,RETURN2,100)])
     
     #posibles errores grandes
     
@@ -326,7 +327,7 @@ for i in range(len(f)):
 
 
 
-
+gamma=G[-1]
 plt.plot(f,Time_ave,"k",label="uncorrected")
 plt.plot(f,Time_ave_C,"k--",label="corrected")
 plt.ylabel("Time [as]")
