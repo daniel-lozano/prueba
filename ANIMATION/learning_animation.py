@@ -5,7 +5,9 @@ import matplotlib.animation as animation
 import animatplot as amp
 
 def D_func(X,Y,T):
-    return (np.cos(X)*np.sin(Y))*np.exp(-T/10)
+    vx=0.1
+    vy=-0.2
+    return (np.cos(2*(X+vx*T))*np.sin(3*(Y+vy*T)))*np.exp((X+vx*T)**2/10)*np.exp(-T/10)
 
 
 x = np.linspace(0, 1, 50)
@@ -21,7 +23,7 @@ anim = amp.Animation([block])
 
 #Add a pause botton and a bar to manage the time
 anim.controls()
-anim.save_gif('line_moving') # save animation for docs
+#anim.save_gif('line_moving') # save animation for docs
 plt.show()
 
 #Making a 2D animated plot with an evoolution variable t
