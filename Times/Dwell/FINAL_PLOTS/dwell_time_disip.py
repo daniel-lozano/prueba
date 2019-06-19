@@ -135,7 +135,7 @@ def find(func,x):
 '''
 
 #f=np.linspace(0.1,0.8,15)
-f=np.linspace(0.04,0.11,5)
+f=np.linspace(0.04,0.11,10)
 x=np.linspace(0.1,20)
 
 Turning_C=[]#Turning points of corrected function
@@ -220,12 +220,12 @@ TE=np.zeros(len(f))
 #----------Total Dissipative Energy---------------------------------
 
 #gamma=1E-2#E-1#4.5E-1
-G=np.array(range(1,13,2))*0.001
+sign=np.sign(int(input("provide a sign (+1 loosing or -1 gaining): ")))
+G=np.array(range(1,13,2))*0.001*sign#13
 print("G=",G)
 for j in range(len(G)):
     
     for i in range(len(f)):
-        
         gamma=G[j]
         F=f[i]
         DE[i]=DE_func(Turning[i][1],Turning[i][2])
@@ -261,6 +261,7 @@ print("DE_C",DE_C)
 for i in range(len(f)):
     
     F=f[i]
+    
     
     #Doing the calculus for the corrected function with dissipation
     D=DE_C[i]
@@ -327,14 +328,15 @@ for i in range(len(f)):
 
 
 
+
 gamma=G[-1]
 plt.plot(f,Time_ave,"k",label="uncorrected")
 plt.plot(f,Time_ave_C,"k--",label="corrected")
-plt.ylabel("Time [as]")
+plt.ylabel("$ \\tau_D $ ", size=15)
 plt.xlabel("Field (a.u)")
-plt.title("Average dwell time $\\gamma=$"+str(gamma))
+#plt.title("Average dwell time $\\gamma=$"+str(gamma))
 plt.legend()
-plt.savefig("average_disip_gamma="+str(gamma)+".png")
+plt.savefig("average_disip_gamma="+str(gamma)+".eps")
 plt.show()
 plt.close()
 #'''

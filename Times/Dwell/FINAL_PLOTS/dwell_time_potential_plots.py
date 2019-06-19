@@ -185,6 +185,7 @@ FILE.close()
 num=9
 
 F=f[num]
+print(F)
 T1=Turning[num][1]
 T2=Turning[num][2]
 T1_C=Turning_C[num][1]
@@ -211,9 +212,10 @@ plt.plot(n,V_cor_triangle,"--",label="Corrected triangle")
 plt.legend()
 plt.ylim(-0.3,0.3)
 plt.xlim(min(n),15)
-plt.xlabel("$ \eta $")
-plt.ylabel("$ \\mathrm{Potential} $")
-plt.savefig("triangle_potential_"+str(F)+".png")
+plt.xlabel("$ \eta $", size=15)
+plt.ylabel("$ V(\eta,F) $", size=15)
+plt.title("$F=0.11 $ ")
+plt.savefig("triangle_potential_"+str(F)+".eps")
 
 plt.show()
 
