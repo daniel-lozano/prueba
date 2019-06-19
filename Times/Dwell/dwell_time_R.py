@@ -78,7 +78,7 @@ plt.show()
 
 
 f=np.linspace(0.04,0.11,8)
-theta=4*np.pi/6
+theta=np.pi#4*np.pi/6
 
 
 Turning_C=[]#Turning points of corrected function
@@ -215,12 +215,12 @@ for i in range(len(f)):
 
 plt.plot(f,Time,"k",label="uncorrected")
 plt.plot(f,Time_C,"k--",label="corrected")
-plt.ylabel("Time [as]")
+plt.ylabel("$ \\tau_D $",size=15)
 plt.xlabel("Field (a.u)")
 #plt.ylim(0,200)
-plt.title("Dwell time (in R), theta="+str(theta*180/np.pi))
+#plt.title("Dwell time (in R), theta="+str(theta*180/np.pi))
 plt.legend()
-plt.savefig("dwell_time_R_"+str(theta*180/np.pi)+".png")
+plt.savefig("dwell_time_R_"+str(theta*180/np.pi)+".eps")
 plt.show()
 plt.close()
 

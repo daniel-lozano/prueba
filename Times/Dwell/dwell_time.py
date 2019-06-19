@@ -212,13 +212,13 @@ for i in range(len(f)):
 
 
 
-plt.semilogy(f,Time,"k",label="uncorrected")
-plt.semilogy(f,Time_C,"k--",label="corrected")
-plt.ylabel("Time [as]")
+plt.plot(f,Time,"k",label="uncorrected")
+plt.plot(f,Time_C,"k--",label="corrected")
+plt.ylabel("$ \\tau_D $ ",size=15)
 plt.xlabel("Field (a.u)")
-plt.title("Dwell time")
+#plt.title("Dwell time")
 plt.legend()
-plt.savefig("dwell_time_N="+str(argv[1])+".png")
+plt.savefig("dwell_time_N="+str(argv[1])+".eps")
 plt.show()
 plt.close()
 

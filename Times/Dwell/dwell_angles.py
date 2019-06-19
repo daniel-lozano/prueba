@@ -53,7 +53,7 @@ r1=np.linspace(0.5,100,1000)
 f1=[0.04,0.06,0.08,0.10,0.11]
 
 theta=np.pi/3
-THETA=[0,30,45,60,90,120,135,150,180]
+THETA=[0,30,60,90,120,150,180]
 for i in range(len(THETA)):
     F=0.11
     theta=THETA[i]*np.pi/180
@@ -68,7 +68,7 @@ plt.xlim(0,50)
 plt.xlabel("r")
 plt.ylabel("V(r)")
 plt.title("Potential with different angles")
-plt.savefig("potential_with_theta.png")
+plt.savefig("potential_with_theta.eps")
 plt.show()
 
 
@@ -79,8 +79,8 @@ plt.show()
 
 f=np.linspace(0.04,0.11,8)
 theta=4*np.pi/6
-THETA=[4.0/6,1,3.0/4,95/180.0]
-Colors=["r","b","g","c"]
+THETA=[1]
+Colors=["k","b","g","c"]
 
 #-----------------------------INTEGRATING-----------------------------
 
@@ -158,15 +158,15 @@ for j in range(len(THETA)):
 
 
 
-    plt.plot(f,Time,Colors[j],label="uncorrected, "+str(THETA[j]))
-    plt.plot(f,Time_C,Colors[j]+"--",label="corrected, "+str(THETA[j]))
+    plt.plot(f,Time,Colors[j],label="uncorrected, ")
+    plt.plot(f,Time_C,Colors[j]+"--",label="corrected, ")
 
 plt.ylabel("Time [as]")
 plt.xlabel("Field (a.u)")
 #plt.ylim(0,200)
 plt.title("Dwell time (in R), theta="+str(theta*180/np.pi))
 plt.legend()
-plt.savefig("dwell_time_R_"+str(theta*180/np.pi)+".png")
+plt.savefig("dwell_time_R_"+str(theta*180/np.pi)+".eps")
 plt.show()
 plt.close()
 
