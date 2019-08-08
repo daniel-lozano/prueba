@@ -36,9 +36,9 @@ def I(F):
     
     return Io + ((alphaN-alphaI)*F**2)/2.
 
-def I_mod(F):
+def I_mod(F,D):
     
-    return I(F)-D
+    return -I(F)/4. + D/4
 
 #------------------------------------------Original potential factor-------------------------------------------
 
@@ -55,7 +55,7 @@ def potential(n):
     t4=  (alphaI*F/n**2) * np.exp(-3/n)
     
     
-    return -t1 - t2 + t3 + t4  +I_mod(F)/4.0
+    return -t1 - t2 + t3 + t4  -I_mod(F,D)
 
 
 def potential_schro(n):
@@ -74,7 +74,7 @@ def potential_schro(n):
     
     t5= (1/n +1/(4*ro))*np.exp(-n/(2*ro))
     
-    return -t1 - t2 + t3 + t4 - t5 +I_mod(F)/4.0
+    return -t1 - t2 + t3 + t4 - t5 -I_mod(F,D)
 
 #------------------------------------------Wave number-------------------------------------------
 
@@ -106,11 +106,11 @@ def DE_func_C(T1,T2):
 
 def disip_potential(n):
     
-    return potential(n)-n*gamma*(kappa(n)*hbar/(mu*8))
+    return potential(n)#-n*gamma*(kappa(n)*hbar/(mu*8))
 
 def disip_potential_C(n):
     
-    return potential_schro(n)-n*gamma*(kappa_C(n)*hbar/(mu*8))
+    return potential_schro(n)#-n*gamma*(kappa_C(n)*hbar/(mu*8))
 
 def disip_kappa_C(n):
     
@@ -119,9 +119,6 @@ def disip_kappa_C(n):
 def disip_kappa(n):
     
     return np.sqrt(2*mu*abs(disip_potential(n)))/hbar
-
-
-
 
 #encontrar el punto de retorno
 def find(func,x):
@@ -142,6 +139,7 @@ Turning_C=[]#Turning points of corrected function
 Turning=[]#Turning points of uncorrected function
 FILE=open("turning_points.txt","w")
 FILE.write("#F T1C T2C T1 T2 \n")
+print("Setting Dissipation to 0 for first turning point")
 
 
 for i in f:
@@ -150,10 +148,9 @@ for i in f:
     keldish=omega*np.sqrt(2*(I(F)))/F
     print("F=",round(F,3),"gamma_k=",round(keldish,3))
     
-    
     RETURN1=find(potential_schro(x),x)#2
     RETURN2=find(potential(x),x)#2
-    
+    D=0
     Turning_C.append([F,brentq(potential_schro,0.1,RETURN1),brentq(potential_schro,RETURN1,100)])
     
     Turning.append([F,brentq(potential,0.1,RETURN2),brentq(potential,RETURN2,100)])
@@ -162,16 +159,16 @@ for i in f:
     
     #posibles errores grandes
     
-    if(abs(potential_schro(Turning_C[-1][1])>1E-5)):
+    if(abs(potential_schro(Turning_C[-1][1])>5E-4)):
         print("Turning problem! in C1",str(F), potential_schro(Turning_C[-1][1]))
     
-    if(abs(potential_schro(Turning_C[-1][2])>1E-5)):
+    if(abs(potential_schro(Turning_C[-1][2])>5E-4)):
         print("Turning problem! in C2",str(F),potential_schro(Turning_C[-1][2]))
 
-    if(abs(potential(Turning[-1][1])>1E-5)):
+    if(abs(potential(Turning[-1][1])>5E-4)):
         print("Turning problem! in 1",str(F),potential(Turning[-1][1]))
 
-    if(abs(potential(Turning[-1][2])>1E-5)):
+    if(abs(potential(Turning[-1][2])>5E-4)):
         print("Turning problem! in 2",str(F),potential(Turning[-1][2]))
 
 
@@ -220,8 +217,9 @@ TE=np.zeros(len(f))
 #----------Total Dissipative Energy---------------------------------
 
 #gamma=1E-2#E-1#4.5E-1
-sign=np.sign(int(input("provide a sign (+1 loosing or -1 gaining): ")))
-G=np.array(range(1,13,2))*0.001*sign#13
+sign=np.sign(int(input("provide a sign (-1 loosing or +1 gaining): ")))
+#G=np.array(range(1,13,2))*0.001*sign#13
+G=np.linspace(1,5,10)*0.001*sign#13
 print("G=",G)
 for j in range(len(G)):
     
@@ -251,9 +249,9 @@ plt.close()
 
 Turning_C=[]#Turning points of corrected function
 Turning=[]#Turning points of uncorrected function
-print("Gamma>0 gain energy")
+print("Gamma<0 gain energy")
 #gamma=float(input("Gamma (0.001) ="))
-gamma=0#G[-1]
+gamma=G[-1]
 print("Gamma=",gamma)
 print("DE",DE)
 print("DE_C",DE_C)
@@ -261,7 +259,6 @@ print("DE_C",DE_C)
 for i in range(len(f)):
     
     F=f[i]
-    
     
     #Doing the calculus for the corrected function with dissipation
     D=DE_C[i]
@@ -310,7 +307,7 @@ for i in range(len(f)):
     W_C.append((T2_C-T1_C)/1.0)
     
     D=DE[i]
-    func=lambda x: (1/disip_kappa(x))*inte_num(x)
+    func=lambda x: (1./disip_kappa(x))*inte_num(x)
     exponencial=inte_exp(T1,T2)
     Time_ave.append(Factor*quad(func,T1,T2)[0])
     Time.append(Factor*quad(func,T1,T2)[0]/exponencial)
@@ -327,9 +324,16 @@ for i in range(len(f)):
 
 
 
-
-
 gamma=G[-1]
+
+File=open("data_gamma.txt" ,"w")
+File.write("# Field -- Uncorrected time -- Corrected time\n")
+for i in range(len(Time_C)):
+    File.write(str(f[i])+" "+ str(Time_ave[i])+ " "+ str(Time_ave_C[i])+"\n")
+
+
+
+
 plt.plot(f,Time_ave,"k",label="uncorrected")
 plt.plot(f,Time_ave_C,"k--",label="corrected")
 plt.ylabel("$ \\tau_D $ ", size=15)
