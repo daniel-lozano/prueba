@@ -38,7 +38,7 @@ def I(F):
 
 def I_mod(F,D):
     
-    return -I(F)/4. + D/4
+    return -I(F)/4. - D/4
 
 #------------------------------------------Original potential factor-------------------------------------------
 
@@ -217,9 +217,9 @@ TE=np.zeros(len(f))
 #----------Total Dissipative Energy---------------------------------
 
 #gamma=1E-2#E-1#4.5E-1
-sign=np.sign(int(input("provide a sign (-1 loosing or +1 gaining): ")))
+sign=np.sign(int(input("provide a sign (+1 loosing or -1 gaining): ")))
 #G=np.array(range(1,13,2))*0.001*sign#13
-G=np.linspace(1,5,10)*0.001*sign#13
+G=np.linspace(1,23,10)*0.001*sign#13
 print("G=",G)
 for j in range(len(G)):
     
